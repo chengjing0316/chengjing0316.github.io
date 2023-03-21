@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <title>Document</title>
+  <title>JS Bin</title>
 </head>
 <body>
+  
+
   <h1>lorem</h1>
   <h2>Lorem ipsum.</h2>
   <h3>Lorem ipsum dolor.</h3>
@@ -63,5 +65,124 @@
  </dl>
   <hr>
  <div id=">">>>>></div>
+ <!-- google搜索 -->
+  
+  <h1>Google搜索</h1>
+  <form action="google.com" id="information">
+    <input type="text" name="text">
+    <input type="button" target="_blank" value="在新窗口打开搜索结果" >
+  </form>
+  <hr>
+  
+  
+  <!-- 个人信息调查表 -->
+  
+  <form action="">
+    <p>个人信息调查表</p>
+    <dl>
+    <dt>性别</dt>
+      <dd>
+       <lable><input type="radio" name="gender" value="male">男</lable>
+       <lable><input type="radio" name="gender" value="female">女</lable>
+      </dd>
+    <dt>年龄</dt>
+      <dd>
+    <select name="" id="">
+      <option value="" hidden>请选择</option>
+      <optgroup label="少年">
+        <option value="1-6">1到6岁</option>
+        <option value="6-12">6到12岁</option>
+      </optgroup>
+      <optgroup label="青年">
+        <option value="13-15">13到15岁</option>
+        <option value="16-18">16到18岁</option>
+      </optgroup>
+      <optgroup label="少年">
+        <option value="1-6p">1到6岁</option>
+        <option value="6-12p">6到12岁</option>
+      </optgroup>
+    </select>
+      </dd>
+      <dt>生日</dt>
+      <dd><input type="date" name="bitthday" value="2021/11/04"></dd>
+      <dt>生辰</dt>
+      <dd><input type="time" name="borntime" ></dd>
+      <dt>照片</dt>
+      <dd><label><input type="file" hidden name="photo" accept="image/*">点我上传照片，我比文件上传按钮好看</label></dd>
+      <dt>自我介绍</dt>
+      <dd><textarea name="" id="" cols="30" rows="10">&lt/textarea&gt</textarea></dd>
+    </dl>
+  </form>
+  </textarea>
+  <fieldset disabled>
+    <legend>这里全部禁用了</legend>
+    <input type="text">
+    <input type="text">
+    <input type="text">
+    <input type="text">
+  </fieldset>
+  <button>提交</button>
+  <button type="reset">重置</button>
+  <hr>
+  
+   <!-- 表格 -->
+  <table border="1">
+    <colgroup>
+      <col>
+      <col bgcolor="red">
+    </colgroup>
+    <thead>
+      <th>编号</th>
+      <th>品名</th>
+      <th>进价</th>
+      <th>出价</th>
+    </thead>
+    <tbody>
+      <tr>
+        <th>aaa</th>
+        <td>a</td>
+        <td rowspan="2">a</td>
+        <td>a</td>
+      </tr>
+       <tr>
+        <th>a</th>
+        <td>a</td>
+        <td>a</td>
+      </tr>
+       <tr>
+        <th>a</th>
+        <td>a</td>
+        <td>a</td>
+        <td>a</td>
+      </tr>
+       <tr>
+        <th>a</th>
+        <td>a</td>
+        <td>a</td>
+        <td>a</td>
+      </tr>
+    </tbody>
+  </table>
+  <hr>
+  
+  
+     <!-- 图 -->
+  <img title="image title" src="https://drscdn.500px.org/photo/174778125/m%3D1170_k%3D1/2841ccf2a3720e8e794a6a6930f6ff2c" alt="" width="300" usemap="somemap">
+  <map name="somemap">
+    <area shape="rect" coords="58,81,203,187" href="https://www.jd.com" alt="">
+    <area shape="circle" coords="130,268,100" href="https://www.jd.com" alt="">
+    <area shape="poly" coords="229,255,130,367,181,402,290,239" href="https://www.jd.com" alt="">
+  </map>
+  <hr>
+  
+  
+  <!-- 内联窗体 -->
+  <br>
+  <a href="www.mi.com" target="frame1">小米</a>
+  <br>
+ <iframe name="frame1" src="https://www.nodejs.org/" frameborder="1" ></iframe>
+  <div>aaa&nbsp;bbbbb     </div>
+  <pre>aaa   bbbbb</pre>
+  &gt>>>>>>>>>>>>>>>>>>>>&lt<<<<<<<<<<<<<<<<<<<<&ltspan&gt&ltspan&gt
 </body>
 </html>
