@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <style>
+    body>p{background:red;
+    padding-left: 360px;
+    padding-right: 360px;
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;}
+    
+    body>div{box-sizing: border-box;
+    border: solid 2px black;
+    width: 600px;
+    height: 246px;
+    margin:auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding:0 10px;
+    }
+    
+    div p:nth-child(2n+1){
+    overflow: auto;
+    height: 4em;
+    }
+    
+    p:nth-child(2){
+    background-color: rgb(238,130,238);
+    height:50px;
+    }
+    
+    p:nth-child(2):hover{
+      margin-left:-10px;
+      margin-right:-10px;
+    }
+
+    section{
+      border:50px solid;
+      width: 0px;
+      height: 0px;
+      border-color:transparent transparent yellow ;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+<p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Incidunt at, ea natus cupiditate assumenda deserunt ex maxime dignissimos. Soluta laudantium id architecto fugit labore fuga consequatur placeat laboriosam dolorum! Incidunt!</p>
+  
+<div>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae sapiente voluptas officiis, praesentium, nemo iure cumque nihil, facere hic asperiores dicta commodi magni, voluptates eaque esse atque nesciunt! Cupiditate, modi.</p>
+  <p></p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vitae sapiente voluptas officiis, praesentium, nemo iure cumque nihil, facere hic asperiores dicta commodi magni, voluptates eaque esse atque nesciunt! Cupiditate, modi.</p>
+</div>
+
+<section></section>
+</body>
+</html>
