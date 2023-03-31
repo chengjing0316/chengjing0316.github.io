@@ -7,6 +7,7 @@
   <title>Document</title>
 
 <style>
+
 body{margin:0px;}
 
 div.aa{background: black;
@@ -69,6 +70,42 @@ p.d{
   margin: auto;
   text-align: center;
 }
+
+/* block inline */
+
+.block-inline *{
+   box-sizing: border-box;
+}
+.block-inline{
+  width: 600px;
+  margin: auto;
+  box-sizing: border-box;
+  overflow:hidden;
+  font-size:0;
+  margin-top: 15px;;
+}
+
+.block-inline ul{
+  list-style: none;
+  padding: 0;
+  font-size: 0;
+  margin-left:-15px;
+  margin-right:-15px;
+  margin-top:-7.5px;
+  margin-bottom:-7.5px;
+
+
+}
+
+.block-inline ul li{
+  width: 180px;
+  height: 40px;
+  background-color: gold;
+  display: inline-block;
+  border:3px solid;
+  margin: 7.5px 15px;
+  box-sizing:border-box;
+  font-size: 10px;}
 </style>
 
 
@@ -90,7 +127,25 @@ p.d{
     <li>产品</li>
     <li>产品</li>
   </ul>
+<!-- block inline -->
+<div class="block-inline">
+  <ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+    <li>5</li>
+    <li>6</li>
+    <li>7</li>
+    <li>8</li>
+    <li>9</li>
+    <li>10</li>
+    <li>11</li>
+    <li>12</li>
+  </ul>
+</div>
 
+<!-- link ul -->
   <ul class="c">
     <li>link</li>
     <li>link</li>
