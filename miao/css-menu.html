@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    *{margin:0;
+    padding: 0;
+    box-sizing: border-box;}
+    body{background-color: rgb(31,31,31);}
+    /* file */
+    .file{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 50px;
+      border-radius: 5px;}
+    li ul{
+      display: none;
+      width: 100px;
+      border: 1px solid white;
+      top: 29px;
+      position: absolute;
+      background-color: rgb(31,31,31);
+      text-align:left;
+      list-style: none;
+      font-size: 15px;
+      border-radius: 5px;}
+    .file ul{width: 315px;}
+
+    .file:hover>ul{display: block;}
+
+    li:hover{background-color: rgb(70, 70, 69);}
+    
+    .file-six{position: relative;}
+    .file-twelve{position: relative;}
+    .file-six ul{left:313px;top:-2px;}
+    .file-twelve ul{left:313px;top:-2px;}
+    .file-six:hover ul{display: block;}
+    .file-twelve:hover ul{display: block;}
+    section{
+      display: inline-block;
+      position: absolute;
+      top: 6px;
+      left: 280px;
+      border:1px solid;
+      width:8px;
+      height:8px;
+      border-top:transparent;
+      border-left:transparent;
+      transform: rotate(-45deg);}
+
+      /* edit */
+      .edit{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 100px;
+      border-radius: 5px;}
+      .edit:hover ul{
+      display: block;}
+
+      /* selection */
+      .selection{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 150px;
+      border-radius: 5px;}
+      .selection:hover ul{
+      display: block;}
+
+      /* view */
+      .view{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 200px;
+      border-radius: 5px;}
+      .view:hover ul{
+      display: block;}
+
+      /* go */
+      .go{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 250px;
+      border-radius: 5px;}
+      .go:hover ul{
+      display: block;}
+
+      /* run */
+      .run{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 300px;
+      border-radius: 5px;}
+      .run:hover ul{
+      display: block;}
+
+      /* terminal */
+      .terminal{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 350px;
+      border-radius: 5px;}
+      .terminal:hover ul{
+      display: block;}
+
+      /* help */
+      .help{
+      top: 30px;
+      width: 100px;
+      background-color: rgb(24,24,24);
+      border: 1px solid;
+      height: 30px;
+      position: relative;
+      display: inline-block;
+      text-align: center;
+      color: white;
+      left: 400px;
+      border-radius: 5px;}
+      .help:hover ul{
+      display: block;}
+
+  </style>
+</head>
+<body>
+  <div>
+    <ul>
+      <li class="file">文件（F）
+        <ul>
+          <li>新建文本文件 &nbsp; &nbsp; &nbsp;Ctrl+Z</li>
+          <li>新建文件....&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ctrl+Alt+Windows+N</li>
+          <li>新建窗口</li>
+          <li>打开文件</li>
+          <li>打开文件</li>
+          <li class="file-six">打开文件
+            <section></section>
+            <ul>
+              <li>file1</li>
+              <li>file2</li>
+              <li>file3</li>
+              <li>file4</li>
+              <li>file5</li>
+              <li>file6</li>
+            </ul>
+          </li>
+          <li>打开文件</li>
+          <li>打开文件</li>
+          <li>打开文件</li>
+          <li>打开文件</li>
+          <li>打开文件</li>
+          <li class="file-twelve">打开文件
+            <section></section>
+            <ul>
+              <li>file1</li>
+              <li>file2</li>
+              <li>file3</li>
+              <li>file4</li>
+              <li>file5</li>
+              <li>file6</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li class="edit">编辑（E）
+        <ul>
+          <li>menu1</li>
+          <li>menu2</li>
+          <li>menu3</li>
+          <li>menu4</li>
+          <li>menu5</li>
+          <li>menu6</li>
+        </ul>
+      </li>
+      <li class="selection">选择（S）
+        <ul>
+          <li>selection1</li>
+          <li>selection2</li>
+          <li>selection3</li>
+          <li>selection4</li>
+          <li>selection5</li>
+          <li>selection6</li>
+        </ul>
+      </li>
+      <li class="view">查看（V）
+        <ul>
+          <li>view1</li>
+          <li>view2</li>
+          <li>view3</li>
+          <li>view4</li>
+          <li>view5</li>
+          <li>view6</li>
+        </ul>
+      </li>
+      <li class="go">转到（G）
+        <ul>
+          <li>go1</li>
+          <li>go2</li>
+          <li>go3</li>
+          <li>go4</li>
+          <li>go5</li>
+          <li>go6</li>
+        </ul>
+      </li>
+      <li class="run">运行（R）
+        <ul>
+          <li>run1</li>
+          <li>run2</li>
+          <li>run3</li>
+          <li>run4</li>
+          <li>run5</li>
+          <li>run6</li>
+        </ul>
+      </li>
+      <li class="terminal">终端（T）
+        <ul>
+          <li>terminal</li>
+          <li>terminal</li>
+          <li>terminal</li>
+          <li>terminal</li>
+          <li>terminal</li>
+          <li>terminal</li>
+        </ul>
+      </li>
+      <li class="help">帮助（H）
+        <ul>
+          <li>help</li>
+          <li>help</li>
+          <li>help</li>
+          <li>help</li>
+          <li>help</li>
+          <li>help</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
