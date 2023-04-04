@@ -7,7 +7,7 @@
   <title>ios-checkbox</title>
   <style>
 /* 作业讲解*/
-input + label {
+label {
   border: 3px solid #cbcbcb;
   width: 270px;
   height: 155px;
@@ -17,18 +17,20 @@ input + label {
   transition: 0.6s;
   position: relative;
 }
-input + label::before {
+label::before {
   content: '';
-  width: 143px;
+  width: auto;
   height: 143px;
   margin: 3px;
   display: block;
   position: absolute;
   left: 0px;
-  border-radius: 9999px;
+  right:115px;
+  border-radius: 9999px;/*大于一定数值就会变圆*/
   box-shadow: 0 5px 10px #999;
   background-color: white;
-  transition: 0.6s;
+  transition:left 0.4s,right 0.6s;
+  
 }
 
 input:checked + label {
@@ -37,13 +39,15 @@ input:checked + label {
 }
 
 input:checked + label::before {
-  left: 116px;
+  left: 115px;
+  right:0px;
+  transition:left 0.6s,right 0.4s;
 } 
   </style>
 </head>
 <body>
   <!-- 作业讲解  -->
-  <input type="checkbox" id="cb1">
+  <input type="checkbox" id="cb1" hidden>
   <label for="cb1"></label>
 </body>
 </html>
