@@ -6,19 +6,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Xiaomi</title>
   <style>
-    html,body{
-      width: 100%;
-      height:100%;
-      box-sizing: border-box;
-      line-height: 1;
-    }
-
     body{
       margin: 0;
       font: 14px/1.5 Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif;
       min-width: 1226px;
-      background-color:rgb(245,245,245);}
+      background-color:rgb(245,245,245);
+      box-sizing: border-box;}
+    a{
+      text-decoration: none;
+    }
+    @font-face{
+      font-family:MiFont;
+      src: url(./mi-icon-font.ttf);
+    }
 
+    [class*=iconfont]{
+      font-family:MiFont ;
+      color:rgba(176,176,176,0.7);
+    }
+
+    .iconfont-cart::before{
+      content: "\E60C";
+      font-size: 20px;
+    }
+
+    .iconfont-btn::before{
+      content: "\E616";
+      font-size: 24px;
+      color: #333;
+      font-weight: 200;
+    }
+
+    .iconfont-arrow-left::before{
+      content: "\E629";
+      font-size: 40px;
+    }
+
+    .iconfont-arrow-right::before{
+      content: "\E624";
+      font-size: 40px;
+    }
+
+    .iconfont-arrow-nav::after{
+      content: "\E623";
+      font-size: 16px;
+    }
+
+    .iconfont-smart::before{
+      content: "\E615";
+      font-size: 50px;
+      color: #ff6700;
+    }
     /* header */
     header{
       background: rgb(51,51,51);height:40px;
@@ -61,7 +99,9 @@
       background-color: white;
       color: orangered;
     }
-
+    .headerbg-after a:nth-child(4){
+      vertical-align: top;
+    }
     /* 导航栏-header*/
     .main-first{
       width: 100%;
@@ -156,85 +196,124 @@
       display:inline-block;
       vertical-align:bottom;
       padding-top:20px;
+      font-size: 0;
     }
 
     form input{
       width:240px;
       height:50px;
       box-sizing: border-box;
-      border: 2px solid rgb(224,224,224);
+      border: 1px solid rgb(224,224,224);
+      outline-color: #ff6700;
     }
 
     form button{
       width: 50px;
       height: 50px;
       padding: 0;
-      border: 2px solid rgb(224,224,224);
+      border: 1px solid rgb(224,224,224);
+      border-left: none;
+      background-color: #fff;
+      vertical-align: bottom;
     }
 
     /* 导航栏——aside */
-    .main-nav{
-      height: 460px;
-      position: relative;}
+  .main-nav{
+   display: relative;
+   height: 460px;}
 
-    .main-nav-aside{
-      height:460px;
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 235px;
-      background-color:rgba(164,162,162,0.7);
-      z-index: 20;}
+  .main-nav-aside{                      /*菜单容器*/
+  height:460px;
+  width: 235px;
+  position: absolute;
+  xtop: 0;
+  xleft: 0;
+  background-color:rgba(164,162,162,0.7);
+  z-index: 20;}
 
-    .main-nav-aside ul{
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-      height:460px;
-      margin:0;
-      padding:0;
-      list-style: none;
-      box-sizing: border-box;}
+  .nav-menu{                   /*主菜单样式设置*/
+  height:460px;
+  margin:0;
+  padding-top:20px;
+  padding-bottom: 20px;
+  padding-left: 0;
+  list-style: none;
+  box-sizing: border-box;
+  color:white;
+  font-size: 14px;
+  background: rgba(105,101,101,0.6);}
 
-    .main-nav-aside ul li{
-      height:42px;
-      color:white;
-      line-height:42px;
-      width:235px;}
+  .nav-menu li{
+  height:42px;
+  color:white;
+  line-height:42px;
+  width:235px;}
 
-    span.span-before{
-      margin-left:30px;}
+  .nav-menu li span:first-of-type{
+    padding-left: 30px;
+  }
 
-    .main-nav-aside>ul>li::after{
-      content:">";
-      position:absolute;
-      right:30px} 
+  .nav-menu>li:hover{
+   background-color:orangered;
+   cursor: pointer;}
 
-    .main-nav-aside>ul>li:hover{
-      background-color:orangered;}
+   .iconfont-arrow-nav{             /*右边箭头*/
+    position: absolute;
+    right: 0;
+    height: 42px;
+    margin-right: 30px;
+   }
 
-    .main-nav-aside>ul>li>ul{
-      position: absolute;
-      top: 0px;
-      left:100%;
-      flex-wrap: wrap;
-      box-shadow: 5px 5px 10px 1px rgb(176,176,176);
-      background-color: white;
-      width:500px;
-      justify-content:start;
-      visibility:hidden;}
+/*展开菜单样式设置*/
 
-    .main-nav-aside>ul>li:hover li>ul{
-      xvisibility:visible;
-      background-color:red;}
+  .nav-menu{
+    overflow: auto;
+  }
 
-    .main-nav-aside>ul>li>ul>li{
-      height: 70px;
-      color:black;
-      line-height: 42px;
-    }
+  .nav-menu ul{                        
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 0;
+  margin: 0;
+  float: left;
+  position: absolute;                 /*绝对定位调整展开列表位置，父元素为：main-nav*/
+  top: 0;
+  left: 235px;
+  display: grid;
+  grid-template-rows:repeat(6, 76px) ;
+  grid-template-columns:265px;
+  grid-auto-columns:265px;
+  grid-auto-flow: column;
+  list-style: none;
+  background-color:white;
+  box-shadow:2px 2px 7px 5px rgba(224,224,224,0.6);
+  visibility: hidden;               /*隐藏展开菜单*/
+  }
 
-     /* 导航栏——slide */
+  .nav-menu>li:hover>ul{            /*出现展开菜单*/
+    visibility:visible;
+  }
+
+  .nav-menu ul>li{
+    line-height:76px;
+    width: 265px;
+    height: 76px;
+  }
+  .nav-menu ul>li a{
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .nav-menu ul>li img{
+    vertical-align:middle;
+  }
+  .nav-menu ul>li a:hover{             /*实现hover变色效果*/
+    color: orangered;
+  } 
+
+     /* 导航栏——轮播图 */
      .main-nav-slide *{
       box-sizing: border-box;
       margin: 0;
@@ -246,7 +325,7 @@
       height:460px;
       margin-right: 0px;
       margin-top:0px;
-      xbackground-color: rgb(164, 202, 224);
+      position: absolute;
     }
 
     .main-nav-slide img{
@@ -272,6 +351,28 @@
       z-index:2;
     }
 
+    .slide-left>label{
+      display: none;
+      top: 205px;
+      left: 235px;;
+      position: absolute;
+      width:41px;
+      height:69px;
+      z-index:3;
+      line-height: 69px;
+    }
+
+    .slide-right>label{
+      display: none;
+      top: 205px;
+      right: 0;
+      position: absolute;
+      width:41px;
+      height:69px;
+      z-index:3;
+      line-height: 69px;
+    }
+
     .select>label{
       display: inline-block;
       width: 10px;
@@ -282,22 +383,50 @@
       cursor: pointer;
     }
 
-    .main-nav-slide label:hover{
+    .main-nav-slide .select label:hover{
       background-color:white;
     }
 
     .main-nav-slide input:nth-of-type(1):checked ~ .select label:nth-of-type(1),
     .main-nav-slide input:nth-of-type(2):checked ~ .select label:nth-of-type(2),
     .main-nav-slide input:nth-of-type(3):checked ~ .select label:nth-of-type(3),
-    .main-nav-slide input:nth-of-type(4):checked ~ .select label:nth-of-type(4){
+    .main-nav-slide input:nth-of-type(4):checked ~ .select label:nth-of-type(4),
+    .main-nav-slide input:nth-of-type(5):checked ~ .select label:nth-of-type(5){
       background-color: rgba(239, 238, 237,0.5);
     }
 
     .main-nav-slide input:nth-of-type(1):checked ~ .picture:nth-of-type(1),
     .main-nav-slide input:nth-of-type(2):checked ~ .picture:nth-of-type(2),
     .main-nav-slide input:nth-of-type(3):checked ~ .picture:nth-of-type(3),
-    .main-nav-slide input:nth-of-type(4):checked ~ .picture:nth-of-type(4){
+    .main-nav-slide input:nth-of-type(4):checked ~ .picture:nth-of-type(4),
+    .main-nav-slide input:nth-of-type(5):checked ~ .picture:nth-of-type(5){
       opacity: 1;
+    }
+
+    .main-nav-slide input:nth-of-type(1):checked ~ .slide-left label:nth-of-type(4),
+    .main-nav-slide input:nth-of-type(2):checked ~ .slide-left label:nth-of-type(1),
+    .main-nav-slide input:nth-of-type(3):checked ~ .slide-left label:nth-of-type(2),
+    .main-nav-slide input:nth-of-type(4):checked ~ .slide-left label:nth-of-type(3),
+    .main-nav-slide input:nth-of-type(1):checked ~ .slide-right label:nth-of-type(2),
+    .main-nav-slide input:nth-of-type(2):checked ~ .slide-right label:nth-of-type(3),
+    .main-nav-slide input:nth-of-type(3):checked ~ .slide-right label:nth-of-type(4),
+    .main-nav-slide input:nth-of-type(4):checked ~ .slide-right label:nth-of-type(1){
+      display: block;
+    }
+
+    .slide-left label:hover{
+      background-color:rgb(99,109,117);
+      border-radius: 2px;
+    }
+    .slide-right label:hover{
+      background-color:rgb(99,109,117);
+      border-radius: 2px;
+    }
+    .slide-left label span:hover{
+      color:white;
+    }
+    .slide-right label span:hover{
+      color:white;
     }
     /* 导航栏.nav-footer */
     .nav-footer{
@@ -305,11 +434,13 @@
       justify-content: space-between;
       width: 100%;
       align-items:end;
-      height: 170px;
+      height: 196px;
+      margin-top: 14px;
+      padding-bottom: 26px;
     }
 
     .nav-footer ul{
-      width:234px;
+      width:235px;
       height: 170px;
       display: flex;
       flex-wrap: wrap;
@@ -322,7 +453,6 @@
     }
 
     .nav-footer ul li{
-      margin: 15px;
       text-align: center;
       box-sizing: border-box;
       width: 76px;
@@ -334,22 +464,30 @@
       color: #fff;
       opacity: 0.7;
       margin: 0;
-      padding: 0;
+      display: block;
+      padding-top: 20px;
     }
 
-    .nav-footer ul li img{
+    .nav-footer>ul>li>a>img{
       width:24px;
       height: 24px;
+      display:block;
+      margin: auto;
     }
 
     .nav-footer ul li a span{
-      display: block;
       font-size: 10px;
+      xdisplay: block;
     }
 
-    .nav-footer a img{
-      width: 316px;
-      height: 170px;
+    .nav-footer>a{
+      width:316px;
+      height:170px;
+    }
+
+    .nav-footer>a>img{
+      width:316px;
+      height:170px;
     }
 
     .nav-footer ul li a:hover{
@@ -359,6 +497,252 @@
     .nav-footer a img:hover{
       box-shadow:0 0 5px 1px grey;
     }
+
+    /* main-banner */
+    .main-banner{
+      margin:22px auto;
+      width: 1226px;
+      height: 120px;
+    }
+
+    .main-banner a{
+      width: 1226px;
+      height: 120px;
+      display: block;
+    }
+
+    /* main-phone */
+    .main-phone *{
+box-sizing: border-box;
+}
+.main-phone{
+  position: relative;
+  width: 1226px;
+  height: 672px;
+  margin:0 auto 22px;
+}
+
+.phone-header{
+  height: 58px;
+}
+
+.phone-title{
+  font-size: 22;
+  line-height: 58px;
+  font-weight: 200;
+  color: #424242;
+}
+
+.phone-more{
+  display:block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  line-height: 58px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #424242;
+}
+.phone-more:hover{
+  color: #ff6700;
+}
+.phone-list{
+  margin: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  width: 1226px;
+  height: 614px;
+  flex-wrap: wrap;
+  padding: 0;
+  justify-content: space-between;
+  align-content:space-between;
+}
+.phone-list li{
+  background-color:rgb(255,255,255);
+}
+.phone-list li:first-child{
+  width: 234px;
+  height: 614px;
+}
+.phone-list li:first-child a{
+  width: 234px;
+  height:100%;
+  display: block;
+  text-decoration: none;
+}
+
+.phone-list li:nth-child(n+2){
+  width: 234px;
+  height: 300px;
+}
+
+.phone-list li:nth-child(n+2) a{
+  height: 100%;
+  display: block;
+  padding-top:20px;
+  padding-bottom: 20px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.phone-list li:nth-child(n+2) img{
+  width: 160px;
+  height: 160px;
+}
+
+.title{                           /* 全局产品名 */
+  font-weight: 400;
+  color: #333;
+  font-size: 14px;
+  margin: 0 10px 2px;
+}
+.desc{                            /* 全局产品介绍 */
+  margin: 0 10px 10px;
+  height: 18px;
+  font-size: 12px;
+  color: #b0b0b0;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.price{                         /* 全局产品价格 */
+  margin: 0 10px 14px;
+  text-align: center;
+  color: #ff6700;
+  font-size: 14px;
+}
+
+.price del{                    /* 全局产品原价格 */
+  color: #b0b0b0;
+}
+
+/* 智能穿戴 */
+.smart{
+  margin:0 auto 22px;
+  width: 1226px;
+}
+
+  .smart *{
+    box-sizing: border-box;
+  }
+
+  .smart-header{                    /* 智能穿戴标题 */
+  height: 58px;
+  width: 1226px;
+  position: relative;
+}
+
+.smart-title{
+  font-size: 22;
+  line-height: 58px;
+  font-weight: 200;
+  color: #424242;
+}
+
+.smart-more{
+  display:block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  line-height: 58px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #424242;
+}
+.smart-more:hover{
+  color: #ff6700;
+}
+
+  .smart ul {                           /* 智能穿戴主体 */
+    width:1226px;
+    height: 614px;
+    display: grid;
+    grid-template-rows:repeat(4,1fr);
+    grid-template-columns:repeat(5,1fr);
+    float: left;
+    gap:14px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .smart ul li{
+    grid-row-end:span 2;
+    text-align: center;
+    background-color: #fff;
+  }
+
+  .smart>ul>li a{
+    width: 234px;
+    display: block;
+    height:100%;
+  }
+
+  .smart ul li:nth-child(1){
+    grid-row-end:span 4;
+  }
+  .smart ul li:nth-child(1) a{
+    height: 614px;
+    display: block;
+  }
+  .smart ul li:nth-last-child(-n+2){
+    grid-row-end:span 1;
+  }
+
+  .smart ul li:nth-child(n+2):nth-child(-n+8) img{
+    width: 160px;
+    height: 160px;
+    margin: 0 37px 18px;
+  }
+  .smart ul li:nth-child(n+2):nth-child(-n+8) a{
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .smart ul li:nth-child(9){                              /* 第九个格子布局调整 */
+    position:relative;
+    padding-top: 50px;}
+
+  .smart ul li:nth-child(9) img{
+    position: absolute;
+    right: 20px;
+    top: 32px;
+    width: 80px;
+    height: 80px;
+  }
+
+  .smart ul li:nth-child(9) h3{
+    margin: -10px 110px 5px 30px;
+    text-align: left;
+  }
+
+  .smart ul li:nth-child(9) p{
+    margin: 0px 110px 0 30px;
+    text-align: left;
+  }
+
+  .smart ul li:nth-child(10){                              /* 第十个格子布局调整 */
+    position:relative;
+    padding-top: 50px;}
+  .smart ul li:nth-child(10) div{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    right: 20px;
+    top: 35px;
+  }
+  .smart ul li:nth-child(10) h3{
+    margin: 0px 110px 5px 30px;
+    text-align: left;
+    font-size: 18px;
+  }
+  .smart ul li:nth-child(10) p{
+    margin: 0px 110px 0 30px;
+    text-align: left;
+  }
+
+
   </style>
 </head>
 <body>
@@ -384,9 +768,10 @@
       <a href="">登录</a>
       <a href="">注册</a>
       <a href="">消息通知</a>
-      <a href="">购物车（0）</a>
+      <a href=""><span class="iconfont-cart">购物车（0）</span> </a>
     </div>
   </header>
+
    <!-- main -->
   <main>
       <!-- 导航栏 -->
@@ -472,35 +857,62 @@
         </ul>
         <form action="">
           <input type="text" id="search-content" placeholder="电视">
-          <button>search</button>
+          <button><span class="iconfont-btn"></span></button>
         </form>
       </div>
 
       <div class="main-nav">
-        <div class="main-nav-aside">
-          <ul>
+        <div class="main-nav-aside">   <!-- 右展菜单 -->
+          <ul class="nav-menu">
             <li>
-              <span class="span-before">手机</span>
+              <span>手机</span>  <!-- 展开手机页 -->
+              <span class="iconfont-arrow-nav"></span>
               <ul>
-                <li><span class="span-before">Xiaomi系列</span></li>
-                <li><span class="span-before">Xiaomi系列</span></li>
-                <li><span class="span-before">Xiaomi系列</span></li>
-                <li><span class="span-before">Xiaomi系列</span></li>
-                <li><span class="span-before">Xiaomi系列</span></li>
-                <li><span class="span-before">Xiaomi系列</span></li>
-                <li><span class="span-before">Xiaomi系列</span></li>
+                <li><a href="https://www.mi.com/shop/search?keyword=xiaomimix%E7%B3%BB%E5%88%97"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/ecfbf9d01c8a2605f0a6938093b23ad8.png?thumb=1&w=40&h=40&f=webp&q=90" alt=""><span>Xiaomi MIX系列</span></a></li>
+                <li><a href="https://www.mi.com/shop/search?keyword=xiaomi%E6%95%B0%E5%AD%97%E7%B3%BB%E5%88%97"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/827fae95d0f1d75f1535ef93e357b2af.png?thumb=1&w=40&h=40&f=webp&q=90" alt=""><span>Xiaomi数字系列</span></a></li>
+                <li><a href="https://www.mi.com/shop/search?keyword=xiaomicivi%E7%B3%BB%E5%88%97"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/930ddc941c1e6c81042406440e88ac45.png?thumb=1&w=40&h=40&f=webp&q=90" alt=""><span>Xiaomi Civi系列</span></a></li>
+                <li><a href="https://www.mi.com/shop/search?keyword=xiaomi%E9%9D%92%E6%98%A5%E7%B3%BB%E5%88%97"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/0453934fca43f79d0472b28e382bd2be.png?thumb=1&w=40&h=40&f=webp&q=90" alt=""><span>Xiaomi青春系列</span></a></li>
+                <li><a href="https://www.mi.com/shop/search?keyword=redmiK%E7%B3%BB%E5%88%97"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/993aff4f7f59dd64011c61a3132f0fd4.png?thumb=1&w=40&h=40&f=webp&q=90" alt=""><span>Redmi K系列</span></a></li>
+                <li><a href="https://www.mi.com/shop/search?keyword=redminote%E7%B3%BB%E5%88%97"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/9ab5c6d195d2b3dde69683966891d5a9.png?thumb=1&w=40&h=40&f=webp&q=90" alt=""><span>Redmi Note系列</span></a></li>
+                <li><a href="https://www.mi.com/shop/search?keyword=redmi%E6%95%B0%E5%AD%97%E7%B3%BB%E5%88%97"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/232c1ede1284125cc4dcee5c7565d8fe.png?thumb=1&w=40&h=40&f=webp&q=90" alt=""><span>Redmi数字系列</span></a></li>
               </ul>
-              
+            </li>   
+            <li>
+              <span>电视</span>
+              <span class="iconfont-arrow-nav"></span>
             </li>
-            <li><span class="span-before">电视</span></li>
-            <li><span class="span-before">家电</span></li>
-            <li><span class="span-before">笔记本 平板</span></li>
-            <li><span class="span-before">出行 穿戴</span></li>
-            <li><span class="span-before">耳机 音箱</span></li>
-            <li><span class="span-before">健康 儿童</span></li>
-            <li><span class="span-before">生活 箱包</span></li>
-            <li><span class="span-before">智能 路由器</span></li>
-            <li><span class="span-before">电源 配件</span></li>
+            <li>
+              <span>家电</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
+            <li>
+              <span>笔记本 平板</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
+            <li>
+              <span>出行 穿戴</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
+            <li>
+              <span>耳机 音箱</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
+            <li>
+              <span>健康 儿童</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
+            <li>
+              <span>生活 箱包</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
+            <li>
+              <span>智能 路由器</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
+            <li>
+              <span>电源 配件</span>
+              <span class="iconfont-arrow-nav"></span>
+            </li>
           </ul>
         </div>
       <div class="main-nav-slide">
@@ -520,17 +932,31 @@
             <label for="choose3"></label>
             <label for="choose4"></label>
           </div>
+
+          <div class="slide-left">
+            <label for="choose1"><span class="iconfont-arrow-left"></span></label>
+            <label for="choose2"><span class="iconfont-arrow-left"></span></label>
+            <label for="choose3"><span class="iconfont-arrow-left"></span></label>
+            <label for="choose4"><span class="iconfont-arrow-left"></span></label>
+          </div>
+      
+          <div class="slide-right">
+            <label for="choose1"><span class="iconfont-arrow-right"></span></label>
+            <label for="choose2"><span class="iconfont-arrow-right"></span></label>
+            <label for="choose3"><span class="iconfont-arrow-right"></span></label>
+            <label for="choose4"><span class="iconfont-arrow-right"></span></label>
+          </div>
       </div>
       </div>
 
       <div class="nav-footer">
         <ul>
-          <li><a href=""><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/82abdba456e8caaea5848a0cddce03db.png?w=48&h=48" alt="保障服务"><span> 保障服务</span></a></li>
-          <li><a href=""><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/806f2dfb2d27978e33fe3815d3851fa3.png?w=48&h=48" alt="企业团购"><span> 企业团购</span></a></li>
-          <li><a href=""><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/eded6fa3b897a058163e2485532c4f10.png?w=48&h=48" alt="F码通道"><span> F码通道</span></a></li>
-          <li><a href=""><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/43a3195efa6a3cc7662efed8e7abe8bf.png?w=48&h=48" alt="米粉卡"><span> 米粉卡</span></a></li>
-          <li><a href=""><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/f4846bca6010a0deb9f85464409862af.png?w=48&h=48" alt="以旧换新"><span> 以旧换新</span></a></li>
-          <li><a href=""><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/9a76d7636b08e0988efb4fc384ae497b.png?w=48&h=48" alt="话费充值"><span> 话费充值</span></a></li>
+          <li><a target="_blank" href="https://api.jr.mi.com/activity/scene/scenePCsearch.html?from=search"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/82abdba456e8caaea5848a0cddce03db.png?w=48&h=48" alt="保障服务"><span> 保障服务</span></a></li>
+          <li><a target="_blank" href="https://qiye.mi.com/"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/806f2dfb2d27978e33fe3815d3851fa3.png?w=48&h=48" alt="企业团购"><span> 企业团购</span></a></li>
+          <li><a target="_blank" href="https://www.mi.com/shop/order/fcode"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/eded6fa3b897a058163e2485532c4f10.png?w=48&h=48" alt="F码通道"><span> F码通道</span></a></li>
+          <li><a target="_blank" href="https://10046.mi.com/"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/43a3195efa6a3cc7662efed8e7abe8bf.png?w=48&h=48" alt="米粉卡"><span> 米粉卡</span></a></li>
+          <li><a target="_blank" href="https://www.mi.com/a/h/16769.html"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/f4846bca6010a0deb9f85464409862af.png?w=48&h=48" alt="以旧换新"><span> 以旧换新</span></a></li>
+          <li><a target="_blank" href="https://account.xiaomi.com/fe/service/login/password?_locale=zh_CN&sid=recharge&qs=%253Fcallback%253Dhttp%25253A%25252F%25252Frecharge.10046.mi.com%25252Fsts%25253Fsign%25253DbC%2525252Bk1yrraTJbriZ0UbiV7hfzHz4%2525253D%252526followup%25253Dhttp%2525253A%2525252F%2525252Frecharge.10046.mi.com%2525252F%2526sid%253Drecharge%2526_locale%253Dzh_CN&callback=http%3A%2F%2Frecharge.10046.mi.com%2Fsts%3Fsign%3DbC%252Bk1yrraTJbriZ0UbiV7hfzHz4%253D%26followup%3Dhttp%253A%252F%252Frecharge.10046.mi.com%252F&_sign=P%2BzbqaqaY2j9zuZTC7mrhVJnmJo%3D&serviceParam=%7B%22checkSafePhone%22%3Afalse%2C%22checkSafeAddress%22%3Afalse%2C%22lsrp_score%22%3A0.0%7D&showActiveX=false&theme=&needTheme=false&bizDeviceType="><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/9a76d7636b08e0988efb4fc384ae497b.png?w=48&h=48" alt="话费充值"><span> 话费充值</span></a></li>
         </ul>
         <a target="_blank" href="https://www.mi.com/shop/buy/detail?product_id=18075"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/0cf5e958bc88727b50c5c5fba7a8f47a.jpg?w=632&h=340" alt=""></a>
         <a target="_blank" href="https://www.mi.com/shop/buy/detail?product_id=10050021"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/6dd2f3e0de4e6cbba98fd3799cfa5bf7.jpg?w=632&h=340" alt=""></a>
@@ -538,9 +964,167 @@
       </div>
     </div>
 
+    <!-- main-banner -->
 
+    <div class="main-banner"><a href="https://www.mi.com/a/h/28779.html?sign=1a6153cd4077c6918cdd9380ddca218d"><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8034ed2ad4b10f7f117ac2529b06cfca.jpg?thumb=1&w=1226&h=120&f=webp&q=90" alt=""></a></div>
+    
+    <!-- main-phone -->
+    <div class="main-phone">
+      <div class="phone-header">
+        <h2 class="phone-title">手机</h2>
+        <a class="phone-more" href="https://www.mi.com/p/1915.html" target="_blank">查看更多</a>
+      </div>
+      <ul class="phone-list">
+        <li><a href="https://www.mi.com/shop/buy/detail?product_id=18075" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/d91bb6cf7da0947e8a6e50e03f4daf06.jpg?thumb=1&w=234&h=614&f=webp&q=90" alt="">
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=18268" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/8b046feca0a7bb3f7b961a9690babb1b.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Redmi Note 12 Turbo</h3>
+            <p class="desc">狂暴引擎超强性能释放</p>
+            <p class="price">1999元起</p>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=17972" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202211292351_92aba2c69123166a74ba2e2b525b1ae2.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Xiaomi 13限量定制色</h3>
+            <p class="desc">全新第二代骁龙8｜徕卡专业光学镜头｜徕卡原生双画质 | 6.36″超窄边屏幕｜67W小米澎湃秒充｜徕卡75mm长焦镜头</p>
+            <p class="price">4999元</p>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=18075" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/a6cec580260ceb20ae6a885c2c65c611.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Redmi K60</h3>
+            <p class="desc">骁龙8+｜2K 高光直屏｜5500mAh+67W闪充</p>
+            <p class="price">2499元起 <del>2699元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=17969" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/aa047170a22d9f0852254aa36df5f5f0.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Xiaomi 13 Pro</h3>
+            <p class="desc">全新第二代骁龙8｜徕卡专业光学镜头｜徕卡原生双画质 | 2K 专业原色屏｜120W小米澎湃秒充 ｜徕卡75mm长焦镜头</p>
+            <p class="price">4999元起</p>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=18077" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/f37dd30477e7ba040c7fb69c31ad8bf3.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title"> Redmi K60 Pro</h3>
+            <p class="desc">【第二代骁龙8】狂暴引擎</p>
+            <p class="price">3299元起 <del>3599元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=17971" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/94c6497b70f2e881460cb232082a0da6.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title"> Xiaomi 13</h3>
+            <p class="desc">全新第二代骁龙8｜徕卡专业光学镜头｜徕卡原生双画质 | 6.36″超窄边屏幕｜67W小米澎湃秒充｜徕卡75mm长焦镜头</p>
+            <p class="price">3999元起</p>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=18092" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202212251443_29b17941a7365948446bd193011d9241.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Redmi Note 12 Pro 极速版</h3>
+            <p class="desc">高通骁龙778G，OLED柔性直屏+一亿像素</p>
+            <p class="price">1699元起</p>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.mi.com/shop/buy/detail?product_id=16642" target="_blank">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202210262033_ef39fca0e37395d07682124770fd3ad9.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Redmi Note 12 5G</h3>
+            <p class="desc">三星 OLED 护眼屏｜骁龙 5G 芯｜5000mAh 电量</p>
+            <p class="price">1199元</p>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-
+    <div class="smart">
+      <div class="smart-header">
+        <h2 class="smart-title">智能穿戴</h2>
+        <a class="smart-more" href="https://www.mi.com/p/1915.html" target="_blank">查看更多</a>
+      </div>
+      <ul>
+        <li><a href=""><img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/c9550c95ee33a22dc8db677dada00f09.jpg?thumb=1&w=234&h=614&f=webp&q=90" alt=""></a></li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202208111200_c1016839eae2c1f5bb79d5afde498e81.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Xiaomi Buds 4 Pro</h3>
+            <p class="desc">48dB智能动态降噪｜骨声纹通话降噪 | 独立空间音频</p>
+            <p class="price">949元 <del>1099元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202204211422_ce41ed00fe7fb79df35101222880121d.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Xiaomi Buds 3 Pro</h3>
+            <p class="desc">40dB自适应降噪 ｜空间音频 ｜ HiFi高保真音质</p>
+            <p class="price">469元 <del>699元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/0b271a074e087848357aa61ae665b214.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Xiaomi Buds 3</h3>
+            <p class="desc">40dB宽频主动降噪 | HiFi高保真音质 | HRTF专业调音</p>
+            <p class="price">299元 <del>499元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202205241527_fb27e27e6587254da27de5ba9c889512.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Redmi Buds 4</h3>
+            <p class="desc">35dB 智能主动降噪 | AI 通话降噪 | 30小时超长续航</p>
+            <p class="price">199元 <del>229元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/mi-mall/11570d5371f16d2d9b19f504e09d01f0.jpg?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Redmi Buds 3</h3>
+            <p class="desc">轻巧半入耳 | 通话降噪 | 20小时长续航</p>
+            <p class="price">159元 <del>199元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202111052007_e8e92e67988ebaff6e075412a54c3c66.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">小米真无线蓝牙耳机Air2 SE</h3>
+            <p class="desc">大尺寸动圈单元 | 20小时持久续航 | 双麦克风通话降噪</p>
+            <p class="price">99元 <del>169元</del></p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202210191430_3ad0e4809ce06a126dea9755adbb2a1b.png?thumb=1&w=200&h=200&f=webp&q=90" alt="">
+            <h3 class="title">Xiaomi骨传导耳机</h3>
+            <p class="desc">小米首款骨传导耳机</p>
+            <p class="price">699元</p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <img src="https://cdn.cnbj1.fds.api.mi-img.com/nr-pub/202209261427_67cd5fddb341f0e0fb0a2295e643b0d8.png?thumb=1&w=100&h=100&f=webp&q=90" alt="">
+            <h3 class="title">Xiaomi降噪蓝牙耳机Necklace</h3>
+            <p class="price">399元</p>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <div class="iconfont-smart"></div>
+            <h3 class="title">浏览更多</h3>
+            <p class="desc">耳机</p>
+          </a>
+        </li>
+      </ul>
+    </div>
 
 
   </main>
