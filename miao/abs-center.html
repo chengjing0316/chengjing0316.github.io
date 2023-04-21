@@ -6,20 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <style>
-    *{
+     *{
     background-color:rgba(0,0,0,0.1);
     box-shadow: inset 0 0 1px red;
-    }
+    } 
 
     html,body{
       margin:0;
     }
 
-    body{
+    .container{
       display: grid;
     }
 
-    div{
+    .container div{
       height: 172px;
       width: 130px;
       border: 2px solid;
@@ -96,9 +96,44 @@
     .g p{
       transform: translatey(51px);
     }
+
+
+    /* 笑脸 */
+
+  .a{
+  width: 200px;
+  height: 200px;
+  background-color:white;
+  border-radius:999px;
+  background-color:aqua;
+  margin:0 50px 50px;
+}
+
+.b{
+  width:50px;
+  height:50px;
+  transform-origin:100px 25px;
+}
+
+img{
+  width:50px;
+  height: 50px;
+}
+
+
+.a:hover .b{
+  transform:rotate(360deg);
+  transition:4s;
+}
+
+.a:hover img{
+  transform:rotate(-360deg);
+  transition:4s;
+}
   </style>
 </head>
 <body>
+  <div class="container">
     <div class="a"><p>flex</p></div>
     <div class="b"><p>绝对定位</p></div>
     <div>
@@ -108,5 +143,12 @@
     <div class="e"><p>grid</p></div>
     <div class="f"><p>行内块</p></div>
     <div class="g"><p>transform</p></div>
+  </div>
+                           <!-- 笑脸 -->
+<div class="a">
+  <div class="b">
+    <img src="https://s1.chu0.com/src/img/gif/cc/cc15a61072cc431b9d2ed1be51d5d7c6.gif?e=1735488000&token=1srnZGLKZ0Aqlz6dk7yF4SkiYf4eP-YrEOdM1sob:WvCzAO7cbPtPar9UMmx_54R_i3Q=" alt="">
+  </div>
+</div>
 </body>
 </html>

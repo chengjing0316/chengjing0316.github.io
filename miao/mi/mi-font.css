@@ -1,0 +1,52 @@
+  @font-face {
+    font-family: MiFont;
+    src: url(./mi-icon-font.ttf);
+  }
+  .icon {
+    font-family: MiFont;
+  }
+  .weibo::before {
+    content: '\e630'
+  }
+  .credit::before {
+    content: '\e63b'
+  }
+  .loop::before {
+    content: '\e63b'
+  }
+  .search::before {
+    content: '\e63a'
+  }
+
+  /* zijide */
+  .iconfont-cart::before{
+    content: "\E60C";
+  }
+
+  .iconfont-btn::before{
+    content: "\E616";
+    font-size: 24px;
+    color: #333;
+    font-weight: 200;
+  }
+
+  .iconfont-arrow-left::before{
+    content: "\E629";
+    font-size: 40px;
+  }
+
+  .iconfont-arrow-right::before{
+    content: "\E624";
+    font-size: 40px;
+  }
+
+  .iconfont-arrow-nav::after{
+    content: "\E623";
+    font-size: 16px;
+  }
+
+  .iconfont-smart::before{
+    content: "\E615";
+    font-size: 50px;
+    color: #ff6700;
+  }
