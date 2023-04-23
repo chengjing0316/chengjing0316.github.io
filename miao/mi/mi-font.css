@@ -6,16 +6,16 @@
     font-family: MiFont;
   }
   .weibo::before {
-    content: '\e630'
+    content: '\e630';
   }
   .credit::before {
-    content: '\e63b'
+    content: '\e63b';
   }
   .loop::before {
-    content: '\e63b'
+    content: '\e63b';
   }
   .search::before {
-    content: '\e63a'
+    content: '\e63a';
   }
 
   /* zijide */
@@ -26,7 +26,6 @@
   .iconfont-btn::before{
     content: "\E616";
     font-size: 24px;
-    color: #333;
     font-weight: 200;
   }
 
@@ -49,4 +48,28 @@
     content: "\E615";
     font-size: 50px;
     color: #ff6700;
+  }
+
+  .spanner::before{
+    content: '\E634';
+  }
+
+  .seven::before{
+    content: '\E635';
+  }
+
+  .fifteen::before{
+    content: '\E636';
+  }
+
+  .gift::before{
+    content: '\E638';
+  }
+
+  .location::before{
+    content: '\E637';
+  }
+
+  .dialog::before{
+    content: '\E600';
   }
