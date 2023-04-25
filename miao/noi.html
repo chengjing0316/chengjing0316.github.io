@@ -88,14 +88,12 @@
 
   <script id="ch0103/09" type="ok">
     var r = +prompt('r');
+    var pi =3.14159;
 
-    var d = 2 * r;
-    var a = 2 * r * Math.PI;
-    var b = Math.PI * r * r;
-    var c = a.toFixed(4);
-    var s = b.toFixed(4);
-    var n = d + " " + c + " " + s;
-    console.log(n);
+    var d = (2 * r).toFixed(4);
+    var c = (2 * r * pi).toFixed(4);
+    var s = (pi * r * r).toFixed(4);
+    console.log(d,c,s);
   </script>
 
   <script id="ch0103/10" type="ok">
