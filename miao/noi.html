@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <script id="ch0103/01" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+
+    var c = a + b;
+    alert(c);
+    console.log(c);
+  </script>
+
+  <script id="ch0103/02" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+    var c = +prompt('c');
+
+    var d = (a + b) * c;
+    alert(d);
+    console.log(d);
+  </script>
+
+  <script id="ch0103/03" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+    var c = +prompt('c');
+
+    var d = (a + b) / c;
+    alert(d);
+    console.log(d);
+  </script>
+
+  <script id="ch0103/04" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+
+    var c = a / b;
+    var x = Math.trunc(c);
+    var d = a % b;
+    alert(x + " " + d);
+    console.log(d);
+  </script>
+
+  <script id="ch0103/05" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+
+    var c = a / b;
+    var d = c.toFixed(9);
+    alert(d);
+    console.log(d);
+  </script>
+
+  <script id="ch0103/06" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+
+    var c = b / a;
+    var d = c * 100;
+    var e = d.toFixed(3);
+    alert(e + '%');
+    console.log(e);
+  </script>
+
+  <script id="ch0103/07" type="ok">
+    var x = +prompt('x');
+    var a = +prompt('a');
+    var b = +prompt('b');
+    var c = +prompt('c');
+    var d = +prompt('d');
+
+    var e = a * (x ** 3) + b * (x**2) + c * x + d
+    var y = e.toFixed(7);
+    alert(y);
+    console.log(y);
+  </script>
+
+  <script id="ch0103/08" type="ok">
+    var F = +prompt('F');
+    var x = 5 * (F - 32) / 9;
+
+    var C = x.toFixed(5);
+    alert(C);
+    console.log(C);
+  </script>
+
+  <script id="ch0103/09" type="ok">
+    var r = +prompt('r');
+
+    var d = 2 * r;
+    var a = 2 * r * Math.PI;
+    var b = Math.PI * r * r;
+    var c = a.toFixed(4);
+    var s = b.toFixed(4);
+    alert(d + " " + c + " " + s);
+    console.log(d + " " + c + " " + s);
+  </script>
+
+  <script id="ch0103/10" type="ok">
+    var r1 = +prompt('r1');
+    var r2 = +prompt('r2');
+  
+    var c = 1 / (1 / r1 + 1 / r2);
+    var R = c.toFixed(2);
+    alert(R);
+    console.log(R);
+  </script>
+
+  <script id="ch0103/11" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+    
+    var c = a % b;
+    var d = c.toFixed(4);
+    alert(d);
+    console.log(d);
+  </script>
+
+  <script id="ch0103/12" type="ok">
+    var r = +prompt('r');
+    var v = 4 / 3 * 3.14 * (r**3)
+
+    var V = v.toFixed(2);
+    alert(V);
+    console.log(V);
+  </script>
+
+  <script id="ch0103/13" type="ok">
+    var a = +prompt('a');
+
+    var b = a % 10;
+    var c = (a % 100 - a % 10) / 10;
+    var d = (a % 1000 - a % 100) / 100;
+    var e = b + "" + c + "" + d;
+    
+    alert(e);
+    console.log(e);
+  </script>
+
+  <script id="ch0103/14" type="ok">
+    var h = +prompt('h');
+    var r = +prompt('r');
+
+    var v = 3.14159 * r * r * h;
+    var t = 20000 / v;
+    var T = Math.ceil(t);
+    alert(T);
+    console.log(T);
+  </script>
+
+  <!-- 15:苹果和虫子 -->
+  <script id="ch0103/15" type="ok">
+    var n = +prompt('n');
+    var x = +prompt('x');
+    var y = +prompt('y');
+
+    var a = y / x;
+    var b = Math.ceil(a);
+    var c = n - b;
+    alert(c);
+    console.log(c);
+  </script>
+
+  <!-- 16:计算线段长度 -->
+  <script id="ch0103/16" type="ok">
+    var Xa = +prompt('Xa');
+    var Ya = +prompt('Ya');
+    var Xb = +prompt('Xb');
+    var Yb = +prompt('Yb');
+
+    var w = (Xa - Xb) * (Xa - Xb) + (Ya - Yb) * (Ya - Yb);
+    var z = Math.sqrt(w);
+    var q = z.toFixed(3);
+    alert(q);
+    console.log(q);
+  </script>
+
+    <!-- 17:计算三角形面积 -->
+  <script id="ch0103/17" type="ok">
+    var Xa = +prompt('Xa');
+    var Ya = +prompt('Ya');
+    var Xb = +prompt('Xb');
+    var Yb = +prompt('Yb');
+    var Xc = +prompt('Xc');
+    var Yc = +prompt('Yc');
+
+    var w = (Xa * Yb + Xb * Yc + Xc * Ya + Xb * Ya + Xc * Yb + Xa * Yc) / 2;
+    var z = w.toFixed(2);
+    alert(z);
+    console.log(z);
+  </script>
+
+  <!-- 18:等差数列末项计算 -->
+  <script id="ch0103/18" type="ok">
+    var a1 = +prompt('a1');
+    var a2 = +prompt('a2');
+    var n = +prompt('n');
+
+    var d = a2 - a1;
+    var s = a1 + (n - 1) * d;
+    alert(s);
+    console.log(s);
+  </script>
+
+  <!-- 19:A*B问题 -->
+  <script id="ch0103/19" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+
+    var s = a * b;
+    alert(s);
+    console.log(s);
+  </script>
+
+  <!-- 20:计算2的幂 -->
+  <script id="ch0103/20" type="ok">
+    var n = +prompt('n');
+
+    var s = 2**n;
+    alert(s);
+    console.log(s);
+  </script>
+</body>
+</html>
+
