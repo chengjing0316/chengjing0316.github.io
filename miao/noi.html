@@ -1176,9 +1176,9 @@
         var w = +prompt("宽")
         var c = prompt("字符")
         var n = +prompt("0代表空心，1代表实心")
+        var result = ""
         if(n == 0){
           for(var i = 1; i <= h; i++){
-              var result = ""
             for(var j = 1; j <= w; j++){
               if(i == 1 || i ==h || j == 1 || j == w){
                 result += c
@@ -1186,15 +1186,17 @@
                 result += " "
               }
             }
-            console.log(result)
+            result += "\n"
           }
+          console.log(result)
         }else{
           for(i = 1; i <= h; i++){
             for(j = 1; j <= w; j++){
               result += c
             }
-            console.log(result)
+            result += "\n"
           }
+          console.log(result)
         }
       </script>
 
