@@ -859,7 +859,29 @@
 
       <!-- 22:津津的储蓄计划-->
       <script id="ch0105/22" type="ok">
+        var money = 0
+        var s = 0
+        var 钱不够花 = false
 
+        for(i = 1; i <= 12; i++){
+          money += 300
+          var x = +prompt("每个月花费")
+          if(x > money){
+            console.log(-i);
+            钱不够花 = true
+            break
+          }else{
+            money -= x
+          }
+          if(money >= 100){
+            var 存的钱 = money - money % 100
+            money -= 存的钱
+            s += 存的钱
+          }
+        }
+        if(钱不够花 == false){
+          console.log(money + s*1.2)
+        }
       </script>
 
       <!-- 23:药房管理-->
@@ -901,12 +923,12 @@
       <!-- 25:求特殊自然数-->
       <script id="ch0105/25" type="ok">
         for(var n = 81; n <= 342; n++){
-          var a7 = a % 7
+          var a7 = n % 7    //七进制的个位数
           var b7 = (n - a7) / 7 % 7
-          var c = (n - b7 * 7 - a7) / 7 / 7 % 7
+          var c7 = (n - b7 * 7 - a7) / 7 / 7 % 7
 
-          var a9 = n % 9
-          var b7 = (n - a9) / 9 % 9
+          var a9 = n % 9    //九进制的个位数
+          var b9 = (n - a9) / 9 % 9
           var c9 = (n - b9 * 9 - a9) / 9 / 9 % 9
 
           if(a7 == c9 && b7 == b9 && c7 == a9){
@@ -1102,10 +1124,29 @@
       </script>
 
       <!-- 38:计算多项式的导函数-->
-      <script id="ch0105/38" type="ok">
-        var x = +prompt("x")
-        var n = +prompt("n")
-        
+      <script id="ch0105/38" >
+        var N = +prompt("多项式组数N:")
+        for(var i = 1; i <= N; i++){
+          var result = ''
+          var n = +prompt("最高次幂n：")
+          var m = 0
+          for(var j = n; j >= 0; j--){
+            var C = +prompt("系数")
+            if(j == 0){
+              break
+            }else if(j == 1){
+              result += C
+            }else{
+              result += C * j + " "
+              m += C * j
+            }
+          }
+          if(m == 0){
+            console.log(0)
+          }else{
+            console.log(result)
+          }
+        }
       </script>
 
       <!-- 39:与7无关的数-->
