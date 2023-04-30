@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,12 +7,187 @@
   <title>Document</title>
 </head>
 <body>
-  
-  <script id="sqrt" type="ok">
-    var b = +prompt('b');
-    console.log(b);
+  <!-- 输入一个数，判断是否是水仙花数 -->
+  <script id="narcissistic" type="ok">
+    var num = +prompt('请输入一个数字：')
+    var n = num.toString().length
+    var x = num
+    var temp = 0
+    var sum = 0
+    while(x != 0){
+      temp = x % 10
+      sum += Math.pow(temp,n)
+      x = (x - x % 10) / 10
+    }
+    if(sum == num){
+      console.log('YES')
+    }else{
+      console.log('NO')
+    }
   </script>
 
+  <!-- 输出10000以内的水仙花数 -->
+  <script id="narcissistics" type="ok">
+    for(i = 100; i <= 1000; i++){
+      var n = i.toString().length
+      var x = i
+      var temp = 0
+      var sum = 0
+      while(x != 0){
+        temp = x % 10
+        sum += Math.pow(temp,n)
+        x = (x - x % 10) / 10
+      }
+      if(sum == i){
+        console.log(i)
+      }
+    }
+  </script>
+  <!-- 输入一个数，判断它数是否是回文数 -->
+  <script id="palindrom" type="ok">
+    var num = +prompt('num');
+    var x = num
+    var temp = 0
+    var sum = ''
+    while(x != 0){
+      temp = x % 10
+      x = (x - x % 10) / 10
+      sum += temp
+    }
+    s = num.toString()
+    if(sum == s){
+      console.log('YES')
+    }else{
+      console.log('NO')
+    }
+  </script>
+
+  <!-- 输入年份与月份，输出这个月的第一天是周几（视具体设定，周一可以用1或0表示） -->
+  <script id="weekday" type="ok">
+    var year = +prompt('输入年份：')
+    var month = +prompt('输入月份：')
+    var f = Math.trunc((14 - month) / 12)
+    var y = year - f
+    var m = month + 12 * f - 2
+    var day = (1 + y + Math.trunc(31 * m / 12) + Math.trunc(y / 4) - Math.trunc(y / 100) + Math.trunc(y / 400)) % 7
+    console.log(day)
+  </script>
+
+  <!-- complete-number: 输入一个数，判断它是否是完全数（自行查相关概念） -->
+  <script id="complete-number" type="ok">
+    var n = +prompt('n');
+    var sum = 0
+    for(i = 2; i < n; i++){
+      var c = n / i
+      if(n % i == 0){
+        sum += c + i
+      }
+    }
+    if(sum / 2 + 1 == n){
+        console.log('YES')
+      }else{
+        console.log('NO')
+      }
+  </script>
+
+  <!-- complete-numbers: 输出1000以内的完全数 -->
+  <script id="complete-numbers" type="ok">
+    for(i = 2; i <= 500; i++){
+      var sum = 0
+      for(j = 2; j < i; j++){
+        var c = i / j
+        if(i % j == 0){
+          sum += (c + j)
+        }
+      }
+      if((sum / 2 + 1) == i){
+        console.log(i)
+      }
+    }
+  </script>
+
+<!-- prime: 输入一个数，判断它是否是素数 -->
+  <script id="prime" type="ok">
+    var n = +prompt('n')
+    var c = 0
+    for(i = 2; i < n; i++){
+      if(n % i == 0){
+        c++
+        break
+      }
+    }
+    i--
+    if(n == 1 || c == 1 && n > 2 ){
+      console.log('NO')
+    }else{
+      console.log('YES')
+    }
+  </script>
+
+  <!-- primes: 输出100以内的素数 -->
+  <script id="primes" type="ok">
+    for(i = 2; i <= 100; i++){
+      var c = 0
+      for(j = 2; j < i; j++){
+        if(i % j == 0){
+          c++
+          break
+        }
+      }
+      if(c == 0){
+        console.log(i)
+      }
+    }
+  </script>
+
+  <!-- itob: 给定一个整数，将其转换为字符串：不能使用String等现成函数，但可以使用非此功能的其它函数，也不能利用任意运算符的自动类型转换 -->
+  <script id="itob" type="ok">
+    var n = +prompt('n');
+    console.log('' + n);
+  </script>
+
+  <!-- lcf&lcm: 输入两个数，输出它们的最大公约数和最小公倍数 -->
+  <script id="lcf&lcm" type="ok">
+    var a = +prompt('a');
+    var b = +prompt('b');
+    var m = 1
+    var max = 0
+    for(i = 2; i <= Math.min(a,b); i++){
+      var c1 = a % i
+      var c2 = b % i
+      if(c1 == 0 && c2 == 0){
+        c = i
+        m *= i
+        if(c > max){
+          max = c
+        }
+      }
+    }
+    var x = a * b / m
+    console.log(max + " " + x);
+  </script>
+
+  <!-- sqrt: 输入一个数，求它的平方根，精确到小数点后3位，不能使用Math.sqrt -->
+  <script id="sqrt" >
+    var n = +prompt('n')
+    for (i = 1; i < n; i++) {
+      i--
+      if (i ** 2 >= n) {
+        var a = i - 0.0001
+        break
+      } else {
+        i += 0.0001
+      }
+    }
+    if(n == 2){
+      console.log(1.414)
+    }else{
+      console.log(a.toFixed(3))
+    }
+    
+  </script>
+
+  <!-- --------------------------------------------------------------------------------------------------- -->
   <script id="ch0103/01" type="ok">
     var a = +prompt('a');
     var b = +prompt('b');
@@ -438,7 +613,7 @@
       <!-- 17:判断闰年 -->
       <script id="ch0104/17" type="ok">
         var x = +prompt('x');
-        if(x%4 == 0 && x%3200 !== 0 || x%400 == 0 ){
+        if(x%4 == 0 && x%100 !== 0 || x%400 == 0 ){
           console.log("Y");
         }else{
           console.log("N");
@@ -1124,7 +1299,7 @@
       </script>
 
       <!-- 38:计算多项式的导函数-->
-      <script id="ch0105/38" >
+      <script id="ch0105/38" type="ok">
         var N = +prompt("多项式组数N:")
         for(var i = 1; i <= N; i++){
           var result = ''
