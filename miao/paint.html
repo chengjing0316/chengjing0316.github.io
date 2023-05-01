@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>画图</title>
+  <style>
+    canvas {
+      border: 2px solid #f0f;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+  <canvas width="500" height="400"></canvas>
+</body>
+<script>
+  var canvas = document.querySelector('canvas')
+  canvas.style.imageRendering = 'pixelated' //放大时的插帧方式：不插帧，直接放大像素
+  var ctx = canvas.getContext('2d')
+
+  function dot(x, y, color = 'black') {
+    x = Math.trunc(x)
+    y = Math.trunc(y)
+    ctx.fillStyle = color
+    ctx.fillRect(x, y, 1, 1)
+  }
+  /**
+   * 你的任务：通过调用dot函数，实现：
+   * 需要注意，dot函数不能接收浮点数，如果参数为浮点数，会被转换为整数后绘制
+      * 1在 坐标 (42, 42) 画出一个点
+      * 2画一条水平实线，粗细为一个像素
+      * 3画一条水平实线，粗细为一个像素
+      * 4画一条一个实点一个空点的虚线
+      * 5画一条两个实点两个空点的虚线
+      * 6画一条三个实点两个空点的虚线
+      * 7画一条45度的斜线
+      * 8画一条30度的斜线（与x轴或y轴的夹角呈30度）
+      * 9画一条跨越画布左上角和右下角的对角线
+      * 10画一个空心矩形
+      * 11画一个实心矩形
+      * 12画两个空心的圆，圆心在画布中心：
+        * 一个半径为50像素
+        * 一个半径为200像素
+      * 13画一个实心的圆，半径至少为100像素
+      * 14画一个【大小位置都合适】的sin(x)的图像
+
+      * 15画出rgb色彩空间的某一面（尺寸要大于100x100）
+      * 16如果做出上一题后，尝试将其每个点的坐标乘以一个矩阵（如(2,0,0,2)或(1,0.27得到新的位置，即绘制出被线性变换后的色彩空间某一面
+        可以考虑如下几种矩阵：
+           2 0
+           0 2
+           ------
+           1  0.27
+           0  1
+           ------
+           0.5    0.87
+           -0.87  0.5
+
+   */
+</script>
+<script>
+  // 不可更改上面的代码
+  // 你的代码写在这里
+
+  // 1、在 坐标 (42, 42) 画出一个点
+  var x = 42
+  var y = 42
+  console.log(dot(x, y, 'red'));
+</script>
+
+<script>
+  // 2、画一条水平实线，粗细为一个像素
+  // 3、画一条水平实线，粗细为一个像素
+  var y1 = 50
+  var y2 = 60
+  for(var x = 50; x < 300; x++){
+    console.log(dot(x, y1, 'blue'))
+    console.log(dot(x, y2, 'red'))
+  }
+</script>
+
+<script>
+  // 4、画一条一个实点一个空点的虚线
+  // 5、画一条两个实点两个空点的虚线
+  // 6、画一条三个实点两个空点的虚线
+  var y3 = 70
+  var y4 = 80
+  var y5 = 90
+  for(var x = 50; x < 300; x++){
+    if(x % 2 == 0){
+      console.log(dot(x, y3, 'red'))
+    }
+    if((x - 2) % 4 == 0){
+      console.log(dot(x, y4, 'red'))
+    }
+    if((x - 3) % 4 == 0){
+      console.log(dot(x, y4, 'red'))
+    }
+    if((x - 2) % 6 == 0){
+      console.log(dot(x, y5, 'red'))
+    }
+    if((x - 3) % 6 == 0){
+      console.log(dot(x, y5, 'red'))
+    }
+    if((x - 4) % 6 == 0){
+      console.log(dot(x, y5, 'red'))
+    }
+  }
+</script>
+
+
+<script>
+  // 7、画一条45度的斜线
+  // 8、画一条30度的斜线（与x轴或y轴的夹角呈30度）
+  // 9、画一条跨越画布左上角和右下角的对角线
+  for(var x1 = 50; x1 < 200; x1++){
+    var y6 = x1
+    var y7 = x1 * Math.sqrt(3) / 3
+    console.log(dot(x1, y6, 'red'))
+    console.log(dot(x1, y7, 'black'))
+  }
+  for(var x1 = 0; x1 < 500; x1++){
+    var y8 = x1 * 4 / 5
+    console.log(dot(x1, y8, 'purple'))
+  }
+</script>
+
+<script>
+  // 10画一个空心矩形
+  // 11画一个实心矩形
+  for(var x1 = 50; x1 <= 100; x1++){
+    for(var y1 = 100; y1 <= 180; y1++){
+      if(x1 == 50 || x1 == 100 || y1 == 100 || y1 == 180){
+        console.log(dot(x1, y1, 'black'))
+      }
+    }
+  }
+  for(var x2 = 50; x2 <= 100; x2++){
+    for(var y2 = 190; y2 <= 270; y2++){
+      console.log(dot(x2, y2, 'red'))
+    }
+  }
+</script>
+
+<script>
+// 12、画两个空心的圆，圆心在画布中心：
+//       一个半径为50像素
+//       一个半径为200像素
+// 13、画一个实心的圆，半径至少为100像素
+  
+</script>
+</html>
