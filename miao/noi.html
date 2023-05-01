@@ -168,23 +168,24 @@
   <!-- sqrt: 输入一个数，求它的平方根，精确到小数点后3位，不能使用Math.sqrt -->
   <script id="sqrt" type="ok">
     var n = +prompt('n')
-    for (i = 1; i < n; i++) {
-      i--
-      if (i ** 2 >= n) {
-        var a = i - 0.0001
+    var h = n
+    var l = 0
+    while(h != l){
+      var m = (h + l) / 2
+      if(m * m > n){
+        h = m
+      }else{
+        l = m
+      }
+      var hy = h.toFixed(3)
+      var ly = l.toFixed(3)
+      var my = m.toFixed(3)
+      if(hy == ly && hy == my && ly == my){
         break
-      } else {
-        i += 0.0001
       }
     }
-    if(n == 2){
-      console.log(1.414)
-    }else{
-      console.log(a.toFixed(3))
-    }
-    
+    console.log(my)
   </script>
-
   <!-- --------------------------------------------------------------------------------------------------- -->
   <script id="ch0103/01" type="ok">
     var a = +prompt('a');
