@@ -129,16 +129,16 @@
 <script>
   // 10画一个空心矩形
   // 11画一个实心矩形
-  for(var x1 = 50; x1 <= 100; x1++){
+  for(var x1 = 50; x1 <= 130; x1++){
     for(var y1 = 100; y1 <= 180; y1++){
-      if(x1 == 50 || x1 == 100 || y1 == 100 || y1 == 180){
-        console.log(dot(x1, y1, 'black'))
+      if(x1 == 50 || x1 == 130 || y1 == 100 || y1 == 180){
+        console.log(dot(x1, y1, 'red'))
       }
     }
   }
-  for(var x2 = 50; x2 <= 100; x2++){
-    for(var y2 = 190; y2 <= 270; y2++){
-      console.log(dot(x2, y2, 'red'))
+  for(var x2 = 0; x2 <= 500; x2++){
+    for(var y2 = 0; y2 <= 400; y2++){
+      console.log(dot(x2, y2, color = 'rgb(' + x2 + ', '+ y2 +',255)'))
     }
   }
 </script>
@@ -148,6 +148,56 @@
 //       一个半径为50像素
 //       一个半径为200像素
 // 13、画一个实心的圆，半径至少为100像素
-  
+  var r1 = 50
+  for(var x = 0; x < r1; x++){
+    y = Math.sqrt(r1 ** 2 - x ** 2)
+    dot(x + 250, y + 200, 'red')
+    dot(x + 250, 200 - y, 'red')
+    dot(250 -x, 200 - y, 'red')
+    dot(250 -x, 200 + y, 'red')
+  }
+  for(var y = 0; y < r1; y++){
+    x = Math.sqrt(r1 ** 2 - y ** 2)
+    dot(x + 250, y + 200, 'red')
+    dot(x + 250, 200 - y, 'red')
+    dot(250 -x, 200 - y, 'red')
+    dot(250 -x, 200 + y, 'red')
+  }
+
+
+  var r2 = 200
+  for(var x = 0; x < r2; x++){
+    y = Math.sqrt(r2 ** 2 - x ** 2)
+    dot(x + 250, y + 200, 'yellow')
+    dot(250 -x, 200 - y, 'yellow')
+  }
+  for(var x = 0; x < r2; x++){
+    y = Math.sqrt(r2 ** 2 - x ** 2)
+    dot(x + 250, 200 - y, 'yellow')
+    dot(250 -x, 200 + y, 'yellow')
+  }
+
+
+  // var r3 = 100
+  for(var x = 0; x < r1; x++){
+    for(y = 0; y <=Math.sqrt(r1 ** 2 - x ** 2); y++){
+      dot(x + 350, 200 + y, 'rgb(247,255,3)')
+      dot(x + 350, 200 - y, 'rgb(247,255,3)')
+    }
+    for(y = -Math.sqrt(r1 ** 2 - x ** 2); y <=0; y++){
+      dot(350 -x, 200 + y, 'rgb(247,255,3)')
+      dot(350 -x, 200 - y, 'rgb(247,255,3)')
+    }
+
+  }
+
+
+
+
+  // 14、画一个【大小位置都合适】的sin(x)的图像
+   for(var x = 0; x < 500; x+=0.1){
+    var y = Math.sin(x)
+    dot(x*10,y*10+300,'red')
+   }
 </script>
 </html>
