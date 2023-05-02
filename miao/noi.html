@@ -1178,7 +1178,7 @@
             if(temp == 3){
               c++
             }
-            m = (m - m % 10) / 10
+            m = (m - temp) / 10
           }
           if(c == k){
             console.log('YES')
@@ -1453,22 +1453,16 @@
       <!-- 45:金币-->
       <script id="ch0105/45" type="ok">
         var n = +prompt("n")
-        var day = 0
+        var day = 0   //当前额度给了多少天
         var sum = 0
+        var c = 1   //当前额度
         for(i = 1; i <= n; i++){
-          var c = 0
-          for(j = 1; j <= i; j++){
-            day++             //计算天数
+          sum += c
+          day++
+          if(day === c){
             c++
-            if(day >= n){
-              break
-            }
+            day = 0
           }
-          an = c * i
-          sum += an
-          if(day >= n){
-              break
-            }
         }
         console.log(sum)
       </script>
