@@ -66,7 +66,8 @@
   // 1、在 坐标 (42, 42) 画出一个点
   var x = 42
   var y = 42
-  console.log(dot(x, y, 'red'));
+
+  dot(x, y, 'red')
 </script>
 
 <script>
@@ -75,8 +76,8 @@
   var y1 = 50
   var y2 = 60
   for(var x = 50; x < 300; x++){
-    console.log(dot(x, y1, 'blue'))
-    console.log(dot(x, y2, 'red'))
+    dot(x, y1, 'blue')
+    dot(x, y2, 'red')
   }
 </script>
 
@@ -89,22 +90,22 @@
   var y5 = 90
   for(var x = 50; x < 300; x++){
     if(x % 2 == 0){
-      console.log(dot(x, y3, 'red'))
+      dot(x, y3, 'red')
     }
     if((x - 2) % 4 == 0){
-      console.log(dot(x, y4, 'red'))
+      dot(x, y4, 'red')
     }
     if((x - 3) % 4 == 0){
-      console.log(dot(x, y4, 'red'))
+      dot(x, y4, 'red')
     }
     if((x - 2) % 6 == 0){
-      console.log(dot(x, y5, 'red'))
+     dot(x, y5, 'red')
     }
     if((x - 3) % 6 == 0){
-      console.log(dot(x, y5, 'red'))
+      dot(x, y5, 'red')
     }
     if((x - 4) % 6 == 0){
-      console.log(dot(x, y5, 'red'))
+      dot(x, y5, 'red')
     }
   }
 </script>
@@ -114,15 +115,16 @@
   // 7、画一条45度的斜线
   // 8、画一条30度的斜线（与x轴或y轴的夹角呈30度）
   // 9、画一条跨越画布左上角和右下角的对角线
+  //靠近哪条轴就以哪条轴为自变量
   for(var x1 = 50; x1 < 200; x1++){
     var y6 = x1
     var y7 = x1 * Math.sqrt(3) / 3
-    console.log(dot(x1, y6, 'red'))
-    console.log(dot(x1, y7, 'black'))
+    dot(x1, y6, 'red')
+    dot(x1, y7, 'black')
   }
   for(var x1 = 0; x1 < 500; x1++){
     var y8 = x1 * 4 / 5
-    console.log(dot(x1, y8, 'purple'))
+    dot(x1, y8, 'purple')
   }
 </script>
 
@@ -132,13 +134,13 @@
   for(var x1 = 50; x1 <= 130; x1++){
     for(var y1 = 100; y1 <= 180; y1++){
       if(x1 == 50 || x1 == 130 || y1 == 100 || y1 == 180){
-        console.log(dot(x1, y1, 'red'))
+        dot(x1, y1, 'red')
       }
     }
   }
   for(var x2 = 50; x2 <= 130; x2++){
     for(var y2 = 200; y2 <= 280; y2++){
-      console.log(dot(x2, y2, color = 'rgb(' + x2 + ', '+ y2 +',255)'))
+      dot(x2, y2, color = 'rgb(' + ((x2 - 50) * 3) + ', '+ ((y2-200)*3) +',255)')
     }
   }
 </script>
@@ -196,8 +198,37 @@
 
   // 14、画一个【大小位置都合适】的sin(x)的图像
    for(var x = 0; x < 500; x+=0.1){
-    var y = Math.sin(x)
-    dot(x*10,y*10+300,'red')
+    var y = Math.sin(x/10)*10
+    dot(x,y+300,'red')
    }
+
+
+   //15、色彩空间
+   for(var x = 0;x < 85; x++){
+    for(var y = 0;y < 85; y++){
+      var x1 = x
+      var y1 = 0.27 * x + y
+      dot(x1+300,y1+250,'rgb('+ x*3 +','+ y*3 +',255)')
+    }
+   }
+          //  2 0
+          //  0 2
+          //  ------
+          //  1  0.27
+          //  0  1
+          //  ------
+          //  0.5    0.87
+          //  -0.87  0.5
+
+   for(var x = 0;x < 85; x++){
+    for(var y = 0;y < 85; y++){
+      var x1 = 0.5 * x -0.87 * y
+      var y1 = 0.87 * x + 0.5 * y
+      dot(x1+400,y1+10,'rgb('+ x*3 +','+ y*3 +',255)')
+    }
+   }
+
+
+
 </script>
 </html>
