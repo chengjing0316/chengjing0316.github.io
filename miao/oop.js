@@ -1,7 +1,7 @@
 
 // Vector
 class Vector{
-  constructor(){
+  constructor(x, y){
     this.x = x
     this.y = y
   }
@@ -23,7 +23,7 @@ class Vector{
 
 //Complex
 class Complex{
-  constructor(){
+  constructor(real, imag){
     this.real = real
     this.imag = imag
   }
@@ -113,9 +113,11 @@ class LinkedList{
     }
     if(this.head == null){
       this.head = this.tail = node
+      return
     }else{
       this.tail.next = node
       this.tail = node
+      return
     }
   }
   prepend(){
@@ -124,9 +126,11 @@ class LinkedList{
     }
     if(this.head == null){
       this.head = this.tail = node
+      return
     }else{
       node.next = this.head
       this.head = node
+      return
     }
   }
   at(idx){ //返回链表的第idx个元素
@@ -189,7 +193,7 @@ class MyMap{
     return false
   }
   get size(){
-    return this.#keys
+    return this.#keys.length
   }
 }
 // MySet
