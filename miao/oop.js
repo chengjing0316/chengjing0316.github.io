@@ -194,7 +194,6 @@ class MyMap{
       this.keys.push(key)
       this.vals.push(val)
     }
-    return this
   }
   get(key){
     var keyIdx = this.keys.indexOf(key)
