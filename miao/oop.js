@@ -188,6 +188,7 @@ class MyMap{
   }
   set(key, val){
     if(this.keys.has(key)){
+      var keyIdx = this.keys.indexOf(key)
       this.vals[keyIdx] = val
     }else{
       this.keys.push(key)
