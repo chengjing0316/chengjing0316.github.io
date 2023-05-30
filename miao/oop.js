@@ -32,20 +32,43 @@ class Complex{
     var imag = this.imag + c.imag
     return new Complex(real, imag)
   }
-  minus(){
+  static plus(a, b){
+    var real = a.real + b.real
+    var imag = a.imag + b.imag
+    return new Complex(real, imag)
+  }
+  minus(c){
     var real = this.real - c.real
     var imag = this.imag - c.imag
     return new Complex(real, imag)
   }
-  mul(){
+  static minus(a, b){
+    var real = a.real - b.real
+    var imag = a.imag - b.imag
+    return new Complex(real, imag)
+  }
+  mul(c){
     var real = this.real * c.real - this.imag * c.imag
     var imag = this.real * c.imag + this.imag * c.real
     return new Complex(real, imag)
   }
-  div(){
+  static mul(a, b){
+    var real = a.real * b.real - a.imag * b.imag
+    var imag = a.real * b.imag + b.imag * b.real
+    return new Complex(real, imag)
+  }
+  div(c){
     var helper = new Complex(c.real, -c.imag)
     var up = this.mul(helper)
     var down = c.mul(helper) 
+    var real = up.real / down.real
+    var imag = up.imag / down.real
+    return new Complex(real, imag)
+  }
+  static div(a, b){
+    var helper = new Complex(b.real, -b.imag)
+    var up = a.mul(helper)
+    var down = b.mul(helper) 
     var real = up.real / down.real
     var imag = up.imag / down.real
     return new Complex(real, imag)
@@ -58,9 +81,10 @@ class Stack{
     this.head = null
     this.nodeCount = 0
   }
-  push(){
+  push(val){
     var node = {
-      val, next:null
+      val:val,
+      next:null
     }
     this.nodeCount++
     if(this.head == null){
@@ -79,7 +103,7 @@ class Stack{
     this.head = this.head.next
     return result
   }
-  size(){
+  get size(){
     return this.nodeCount
   }
 }
@@ -95,7 +119,7 @@ class Queue{
   pop(){
     return this.vals.shift()
   }
-  size(){
+  get size(){
     return this.vals.length
   }
 }
@@ -109,7 +133,8 @@ class LinkedList{
   }
   append(val){
     var node = {
-      val, next:null
+      val:val,
+      next:null
     }
     if(this.head == null){
       this.head = this.tail = node
@@ -120,9 +145,10 @@ class LinkedList{
       return
     }
   }
-  prepend(){
+  prepend(val){
     var node = {
-      val, next: null
+      val:val,
+      next: null
     }
     if(this.head == null){
       this.head = this.tail = node
@@ -134,6 +160,7 @@ class LinkedList{
     }
   }
   at(idx){ //返回链表的第idx个元素
+    if(this.head == this.tail == null) return null
     var p = this.head
     var count = 0
     while(count < idx){
@@ -155,69 +182,67 @@ class LinkedList{
     
     // Mymap
 class MyMap{
-  #keys = []
-  #vals = []
   constructor(){
-    this.#keys = []
-    this.#vals = []
+    this.keys = []
+    this.vals = []
   }
   set(key, val){
-    if(this.#keys.has(key)){
-      this.#vals[keyIdx] = val
+    if(this.keys.has(key)){
+      this.vals[keyIdx] = val
     }else{
-      this.#keys.push(key)
-      this.#vals.push(val)
+      this.keys.push(key)
+      this.vals.push(val)
     }
     return this
   }
   get(key){
-    var keyIdx = this.#keys.indexOf(key)
+    var keyIdx = this.keys.indexOf(key)
     if(keyIdx >= 0){
-      return this.#vals[keyIdx]
+      return this.vals[keyIdx]
     }
   }
   has(key){
-    if(this.#keys.includes(key)){
+    if(this.keys.includes(key)){
       return true
     }else{
       return false
     }
   }
   delete(key){
-    var keyIdx = this.#keys.indexOf(key)
+    var keyIdx = this.keys.indexOf(key)
     if(keyIdx >= 0){
-      this.#keys.splice(keyIdx, 1)
-      this.#vals.splice(keyIdx, 1)
+      this.keys.splice(keyIdx, 1)
+      this.vals.splice(keyIdx, 1)
       return true
     }
     return false
   }
   get size(){
-    return this.#keys.length
+    return this.keys.length
   }
 }
 // MySet
 class MySet{
-  #elements = []
+  elements = []
   constructor(){
-    this.#elements = []
+    this.elements = []
   }
   add(val){
     if(!this.has(val)){
-      this.#elements.push(val)
+      this.elements.push(val)
     }
   }
-  remove(val){
+  delete(val){
     if(this.has(val)){
-      var idx = this.#elements.indexOf(val)
-      this.#elements.splice(idx, 1)
+      var idx = this.elements.indexOf(val)
+      this.elements.splice(idx, 1)
     }
   }
   has(val){
-    return this.#elements.includes(val)
+    return this.elements.includes(val)
   }
-  size(){
-    return this.#elements.length
+  get size(){
+    return this.elements.length
   }
 }
 
