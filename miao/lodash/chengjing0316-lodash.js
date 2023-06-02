@@ -28,14 +28,17 @@ var chengjing0316 = {
       for(let j = 1; j < args.length; j++){
         if(args[j].indexOf(nums1[i]) == -1){
           arr.push(nums1[i])
+          break
         }
       }
     }
     return arr
   },
   fill: function(ary, val, start = 0, end = ary.length - 1){
-    let result = ary.fill(ary,val,start,end)
-    return result
+    for(i = start; i < end; i++){
+      ary[i] = val
+    }
+    return ary
   }
 
 }
