@@ -9,7 +9,7 @@ var chengjing0316 = {
   compact: function(ary){
     let result = []
     for(i = 0; i < ary.length; i++){
-      if(ary[i] !== 0 && ary[i] !== null && ary[i] !== undefined && isNaN(ary[i]) && ary[i] !== "" && ary[i] !== false){
+      if(ary[i] !== 0 && ary[i] !== null && ary[i] !== undefined && !isNaN(ary[i]) && ary[i] !== "" && ary[i] !== false){
         result.push(ary.at(i))
       }
     }
@@ -83,6 +83,7 @@ var chengjing0316 = {
     for(i = 0; i < n; i++){
       ary = ary.flat()
     }
+    return ary
   },
   fromPairs: function(ary){
     let map = new Map()
