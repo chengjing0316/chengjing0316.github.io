@@ -109,5 +109,50 @@ var chengjing0316 = {
       }
     }
     return -1
+  },
+  lastIndexOf: function(ary, val, idx){
+    for(i = ary.length - 1 - idx; i >= 0; i--){
+      if(ary[i] = val){
+        return i
+      }
+    }
+  },
+  initial: function(ary){
+    ary.slice(0, ary.length - 1)
+  },
+  join: function(ary, sep){
+    if(ary.length == 1){
+      return ary[0] + ''
+    }else{
+      let result = ary[0] + ''
+      for(i = 1; i < ary.length; i++){
+        result = result + sep + ary[i]
+      }
+    }
+    return result
+  },
+  last: function(ary){
+    return ary[ary.length - 1]
+  },
+  pull: function(ary, ...args){
+    for(i = 0; i < args.length; i++){
+      while(ary.indexOf(args[i]) !== -1){
+        ary.splice(ary.indexOf(args[i]), 1)
+      }
+    }
+    return ary
+  },
+  reverse: function(ary){
+    let result = []
+    for(i = ary.length - 1; i >= 0; i--){
+      result.push(ary[i])
+    }
+    return result
+  },
+  every: function(collect, pred){
+
+  },
+  some: function(){
+
   }
 }
