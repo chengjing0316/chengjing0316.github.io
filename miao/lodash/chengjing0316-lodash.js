@@ -155,10 +155,18 @@ var chengjing0316 = {
     }
   },
   indexOf: function(ary, val, idx = 0){
-    return ary.lastIndexOf(val, ary.length - 1 - idx)
+    for(let i = 0; i < ary.length; i++){
+      if(ary[i] == val){
+        return i
+      }
+    }
   },
-  lastIndexOf: function(ary, val, idx){
-    return ary.indexOf(val, ary.length - 1 - idx)
+  lastIndexOf: function(ary, val, idx = ary.length - 1){
+    for(let i = idx; i >= 0; i--){
+      if(ary[i] == val){
+        return i
+      }
+    }
   },
   initial: function(ary){
     return ary.slice(0, ary.length - 1)
@@ -192,10 +200,118 @@ var chengjing0316 = {
     }
     return result
   },
-  every: function(collect, pred){
+  every: function(collection, predicate){
+    if(typeof(predicate) !== 'function'){
+      if(Array.isArray(predicate)){
+        let key = predicate[0]
+        let val = predicate[1]
+        predicate = element => element[key] == val
+      }
+      if(typeof(predicate) == 'object'){
+        let predicate2 = predicate
+        predicate = element => isEqual(element, predicate2)
+      }
+      if(typeof(predicate) == 'string'){
+        let predicate3 = predicate
+        predicate = element => element[predicate3]
+      }
+    }
+    for(let item of collection){
+      if(!(predicate(item))){
+        return false
+      }
+    }
+    return true
+  },
+  some: function(collection, predicate){
+    if(typeof(predicate) !== 'function'){
+      if(Array.isArray(predicate)){
+        let key = predicate[0]
+        let val = predicate[1]
+        predicate = element => element[key] == val
+      }
+      if(typeof(predicate) == 'object'){
+        let predicate2 = predicate
+        predicate = element => isEqual(element, predicate2)
+      }
+      if(typeof(predicate) == 'string'){
+        let predicate3 = predicate
+        predicate = element => element[predicate3]
+      }
+    }
+    for(let item of collection){
+      if(predicate(item)){
+        return true
+      }
+    }
+    return false
+  },
+  isEqual: function(a, b){
+    let arr1 = Object.keys(a)
+    let arr2 = Object.keys(b)
+    if(arr1.length !== arr2.length){
+      return false
+    }
+    let c = true
+    for(let item in a){
+      if(a[item] !== b[item]){
+        c = false
+        break
+      }
+    }
+    return c
+  },
+  countBy: function(collection, predicate){
+    let map = {}
+    if(typeof(predicate) == 'function'){
+      let func1 = predicate
+      predicate = e => func1(e)
+    }else{
+      predicate = e => e[predicate]
+    }
+    for(let item of collection){
+      if(!(predicate(item) in map)){
+        map[predicate(item)] = 1
+      }else{
+        map[predicate(item)]++
+      }
+    }
+    return map
+  },
+  by:()=>{
 
   },
-  some: function(){
-
+  groupBy: function(collection, predicate){
+    let map = {}
+    if(typeof(predicate) == 'function'){
+      let func1 = predicate
+      predicate = e => func1(e)
+    }else{
+      predicate = e => e.length
+    }
+    for(let item of collection){
+      if(!(predicate(item) in map)){
+        map[predicate(item)] = [item]
+      }else{
+        map[predicate(item)].push(item)
+      }
+    }
+    return map
+  },
+  keyBy: function(collection, predicate){
+    let map = {}
+    if(typeof(predicate) == 'function'){
+      let func1 = predicate
+      predicate = e => func1(e)
+    }else{
+      let func2 = predicate
+      predicate = e => e[func2]
+    }
+    for(let item of collection){
+      if(!(predicate(item) in map)){
+        map[predicate(item)] = item
+      }
+    }
+    return map
   }
 }
