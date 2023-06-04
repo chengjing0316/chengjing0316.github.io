@@ -53,24 +53,69 @@ var chengjing0316 = {
       return ary.slice(1)
     }
   },
-  findIndex: function(ary, test){
-    for(i = 0; i < ary.length; i++){
+  findIndex: function(ary, test, fromIndex = 0){
+    for(i = fromIndex; i < ary.length; i++){
       if(typeof(test) == 'function'){
         if(test(ary[i]) == true){
           return i
         }
       }
-      if(Array.isArray(ary)){
-        if(test[0] in ary && test[1] == ary[test[0]]){
-          return i
+      if(typeof(test) == 'object'){
+        if(Array.isArray(test)){
+          if(test[0] in ary[i] && test[1] == ary[i][test[0]]){
+            return i
+          }
+        }else{
+            let c = true
+            for(let item in test){
+              if(ary[i][item] !== test[item]){
+                c = false
+              }
+            }
+            if(c){
+              return i
+            }
         }
       }
       if(typeof(test) == 'string'){
-        if(test in ary[i]){
+        if(test in ary[i] && ary[i][test]){
           return i
         }
       }
     }
+    return -1
+  },
+  findLastIndex: function(ary, test, fromIndex = ary.length - 1){
+    for(i = fromIndex; i >= 0; i--){
+      if(typeof(test) == 'function'){
+        if(test(ary[i]) == true){
+          return i
+        }
+      }
+      if(typeof(test) == 'object'){
+        if(Array.isArray(test)){
+          if(test[0] in ary[i] && test[1] == ary[i][test[0]]){
+            return i
+          }
+        }else{
+            let c = true
+            for(let item in test){
+              if(ary[i][item] !== test[item]){
+                c = false
+              }
+            }
+            if(c){
+              return i
+            }
+        }
+      }
+      if(typeof(test) == 'string'){
+        if(test in ary[i] && ary[i][test]){
+          return i
+        }
+      }
+    }
+    return -1
   },
   flatten: function(ary){
     return ary.flat()
@@ -110,10 +155,10 @@ var chengjing0316 = {
     }
   },
   indexOf: function(ary, val, idx = 0){
-    return lastIndexOf(val, ary.length - 1 - idx)
+    return ary.lastIndexOf(val, ary.length - 1 - idx)
   },
   lastIndexOf: function(ary, val, idx){
-    return indexOf(val, ary.length - 1 - idx)
+    return ary.indexOf(val, ary.length - 1 - idx)
   },
   initial: function(ary){
     return ary.slice(0, ary.length - 1)
