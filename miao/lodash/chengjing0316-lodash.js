@@ -44,10 +44,14 @@ var chengjing0316 = {
     return ary
   },
   drop: function(ary, n){
-    for(i = 0; i < n; i++){
-      ary.shift()
+    let result = []
+    if(n > ary.length - 1){
+      return []
+    }else if(n <= ary.length){
+      return ary.slice(n)
+    }else{
+      return ary.slice(1)
     }
-    return ary
   },
   findIndex: function(ary, test){
     for(i = 0; i < ary.length; i++){
@@ -86,9 +90,11 @@ var chengjing0316 = {
     return ary
   },
   fromPairs: function(ary){
-    let map = new Map()
+    let map = {}
     for(let i = 0; i < ary.length; i++){
-           map.set(ary[i][0], ary[i][1])
+      if(!(ary[i][0] in map)){
+        map[ary[i][0]] = ary[i][1]
+      }
     }
     return map
   },
@@ -103,34 +109,25 @@ var chengjing0316 = {
       return undefined
     }
   },
-  indexOf: function(ary, val, idx){
-    for(i = idx; i < ary.length; i++){
-      if(ary[i] = val){
-        return i
-      }
-    }
-    return -1
+  indexOf: function(ary, val, idx = 0){
+    return lastIndexOf(val, ary.length - 1 - idx)
   },
   lastIndexOf: function(ary, val, idx){
-    for(i = ary.length - 1 - idx; i >= 0; i--){
-      if(ary[i] = val){
-        return i
-      }
-    }
+    return indexOf(val, ary.length - 1 - idx)
   },
   initial: function(ary){
-    ary.slice(0, ary.length - 1)
+    return ary.slice(0, ary.length - 1)
   },
   join: function(ary, sep){
     if(ary.length == 1){
       return ary[0] + ''
     }else{
       let result = ary[0] + ''
-      for(i = 1; i < ary.length; i++){
+      for(let i = 1; i < ary.length; i++){
         result = result + sep + ary[i]
       }
+      return result
     }
-    return result
   },
   last: function(ary){
     return ary[ary.length - 1]
