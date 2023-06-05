@@ -156,8 +156,13 @@ var chengjing0316 = {
   },
   indexOf: function(ary, val, idx = 0){
     for(let i = 0; i < ary.length; i++){
-      if(ary[i] == val){
-        return i
+      if(idx < 0 || idx > ary.length - 1){
+        if(ary[i] == val){
+          return i
+        }
+      }
+      if(ary[i + idx] == val){
+        return i + idx
       }
     }
   },
@@ -167,6 +172,7 @@ var chengjing0316 = {
         return i
       }
     }
+    return -1
   },
   initial: function(ary){
     return ary.slice(0, ary.length - 1)
@@ -272,7 +278,8 @@ var chengjing0316 = {
       let func1 = predicate
       predicate = e => func1(e)
     }else{
-      predicate = e => e[predicate]
+      let func2 = predicate
+      predicate = e => e[func2]
     }
     for(let item of collection){
       if(!(predicate(item) in map)){
