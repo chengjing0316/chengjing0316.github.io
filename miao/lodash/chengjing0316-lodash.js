@@ -265,7 +265,7 @@ var chengjing0316 = {
       return false
     }
     for(let item in a){
-      let res = isEqual(a[item], b[item])
+      let res = this.isEqual(a[item], b[item])
       if(!res){
         return false
       }
@@ -322,5 +322,8 @@ var chengjing0316 = {
       }
     }
     return map
+  },
+  forEach: function(collection, iteratee){
+    
   }
 }
