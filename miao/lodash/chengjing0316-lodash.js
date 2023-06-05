@@ -324,8 +324,23 @@ var chengjing0316 = {
   },
   forEach: function(collection, iteratee){
     for(let key in collection){
-      iteratee(collection[key],key)
+      iteratee(collection[key], key,collection)
     }
+    return collection
+  },
+  map: function(collection, iteratee){
+    let arr = []
+    if(typeof(iteratee) == 'function'){
+      let func1 = iteratee
+      iteratee = e => func1(e)
+    }else{
+      let func2 = iteratee
+      iteratee = e => e[func2]
+    }
+    for(let item in collection){
+      arr.push(iteratee(collection[item]))
+    }
+    return arr
   }
   
 }
