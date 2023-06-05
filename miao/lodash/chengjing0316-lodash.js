@@ -209,7 +209,7 @@ var chengjing0316 = {
       }
       if(typeof(predicate) == 'object'){
         let predicate2 = predicate
-        predicate = element => isEqual(element, predicate2)
+        predicate = element => this.isEqual(element, predicate2)
       }
       if(typeof(predicate) == 'string'){
         let predicate3 = predicate
@@ -232,7 +232,7 @@ var chengjing0316 = {
       }
       if(typeof(predicate) == 'object'){
         let predicate2 = predicate
-        predicate = element => isEqual(element, predicate2)
+        predicate = element => this.isEqual(element, predicate2)
       }
       if(typeof(predicate) == 'string'){
         let predicate3 = predicate
@@ -247,19 +247,24 @@ var chengjing0316 = {
     return false
   },
   isEqual: function(a, b){
+    if(typeof(a) !== 'object' || typeof(b) !== 'object'){
+      return a === b
+    }
+    if(a === b){
+      return true
+    }
     let arr1 = Object.keys(a)
     let arr2 = Object.keys(b)
     if(arr1.length !== arr2.length){
       return false
     }
-    let c = true
     for(let item in a){
-      if(a[item] !== b[item]){
-        c = false
-        break
+      let res = isEqual(a[item], b[item])
+      if(!res){
+        return false
       }
     }
-    return c
+    return true
   },
   countBy: function(collection, predicate){
     let map = {}
@@ -277,9 +282,6 @@ var chengjing0316 = {
       }
     }
     return map
-  },
-  by:()=>{
-
   },
   groupBy: function(collection, predicate){
     let map = {}
