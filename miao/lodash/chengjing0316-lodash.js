@@ -144,8 +144,7 @@ var chengjing0316 = {
     return map
   },
   toPairs: function(obj){
-    let result = []
-    
+    return Object.entries(obj)
   },
   head: function(ary){
     if(ary){
@@ -324,6 +323,9 @@ var chengjing0316 = {
     return map
   },
   forEach: function(collection, iteratee){
-    
+    for(let key in collection){
+      iteratee(collection[key],key)
+    }
   }
+  
 }
