@@ -245,7 +245,120 @@ class MySet{
     return this.elements.length
   }
 }
+/*
+String.prototype.mymatch
+String.prototype.mymatchAll
+String.prototype.myreplace
+String.prototype.myreplaceAll
+String.prototype.mysearch 
+RegExp.prototype.mytest
+利用RegExp.prototype.exec实现以上所有函数
+调用方式跟自带的一样
+*/
+String.prototype.mymatch = function(re){
+  if(re.global){
+    re.lastIndex = 0
+    var result =  []
+    var match
+    while(match = re.exec(this)){
+      result.push(match[0])
+    }
+    return result
+  }else{
+    return re.exec(this)
+  }
+}
+String.prototype.mymatchAll = function(re){
+  if(re instanceof RegExp){
+    if(!re.global){
+      throw new TypeError('String.prototype.matchAll called with a non-global RegExp argument')
+    }
+  }
+  if(typeof re == 'string'){
+    re = new RegExp(re, 'g')
+  }
+  re.lastIndex = 0
+  var result = []
+  var match
+  while(match = re.exec(this)){
+    result.push(match)
+  }
+  return result
+}
+String.prototype.mysplit = function(re){
+  if(typeof re == 'string'){
+    re = new RegExp(re)
+  }
+  var result = []
+  if(!re.global){
+    re = new RegExp(re.source, 'g' + re.flags)
+  }
+  re.lastIndex = 0
+  var match
+  var lastLastIndex = 0
+  while(match = re.exec(this)){
+    result.push(this.slice(lastLastIndex, match.index))
+    result.push(...match.slice(1))
+    lastLastIndex = re.lastIndex
+  }
+  result.push(this.slice(lastLastIndex))
+  return result
+}
 
-
-
-
+String.prototype.myreplace = function(regexp, replacer){
+  regexp.lastIndex = 0
+  var result = ''
+  var match
+  var lastLastIndex = 0
+  while(match = regexp.exec(this)){
+    result += this.slice(lastLastIndex,match.index)
+    if(typeof replacer == 'function'){
+      result += replacer(...match, match.index, match.input)
+    }else{
+      var replacement = replacer.myreplace(/\$([1-9\&])/g, (_, idx) =>{
+        if(idx == '&'){
+          return match[0]
+        }else{
+          match[idx]
+        }
+      })
+      result += replacement
+    }
+    lastLastIndex = regexp.lastIndex
+    if(!regexp.global){
+      lastLastIndex = match.index + match[0].length
+      break
+    }
+  }
+  result += this.slice(lastLastIndex)
+  return result
+}
+String.prototype.myreplaceAll = function(){
+  if (!re.global) {
+    throw new TypeError('xxx')
+  }
+  return this.myreplace(re, replacer)
+}
+/**
+ * @param target {string|RegExp}
+ * @returns {number}
+ */
+String.prototype.mysearch = function(target){
+  if(typeof target == 'string'){
+    return this.indexOf(target)
+  }else{
+    var match = target.exec(this)
+    if(match){
+      return match.index
+    }else{
+      return -1
+    }
+  }
+}
+RegExp.prototype.mytest = function(){
+  if(this.exec(str)){
+    return true
+  }else{
+    return false
+  }
+}

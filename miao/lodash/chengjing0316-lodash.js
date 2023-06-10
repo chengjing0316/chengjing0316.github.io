@@ -333,14 +333,21 @@ var chengjing0316 = {
     if(typeof(iteratee) == 'function'){
       let func1 = iteratee
       iteratee = e => func1(e)
-    }else{
+    }
+    if(typeof(iteratee) == 'object'){
       let func2 = iteratee
       iteratee = e => e[func2]
+    }
+    if(typeof(iteratee) == 'string'){
+      let func3 = iteratee
+      iteratee = e => e[func3]
     }
     for(let item in collection){
       arr.push(iteratee(collection[item]))
     }
     return arr
+  },
+  filter: function(){
+
   }
-  
 }

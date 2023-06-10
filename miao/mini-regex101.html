@@ -9,23 +9,23 @@
     background-color:#9fcfff;
   }
   .result-wrapper{
-    width: 200px;
-    height: 300px;
+    width: 300px;
+    height: 200px;
     position: relative;
-    > textarea > pre {
-      box-sizing: border-box;
-      position: absolute;
-      font-size: 24px;
-      padding: 5px;
-      margin:0;
-      border: 2px solid;
-      border-radius: 2px;
-      width: 100%;
-      height: 100%;
-      background-color: transparent;
-      word-break: break-all;
-      white-space: break-spaces;
-    }
+  }
+  textarea, pre {
+    box-sizing: border-box;
+    position: absolute;
+    font-size: 24px;
+    padding: 5px;
+    margin:0;
+    border: 2px solid;
+    border-radius: 2px;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    word-break: break-all;
+    white-space: break-spaces;
   }
 </style>
 
@@ -42,8 +42,8 @@
 <br>
 输入字符串：<br>
 <div class="result-wrapper">
-  <textarea id="stringInput" cols="30" rows="10" oninput="run()">foobarbazbaafoobaafoobaa</textarea>
   <pre id="output"></pre>
+  <textarea id="stringInput" cols="30" rows="10" oninput="run()">foobarbazbaafoobaafoobaa</textarea>
 </div>
 <script>
   function getFlags(){
