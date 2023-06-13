@@ -319,7 +319,7 @@ String.prototype.myreplace = function(regexp, replacer){
         if(idx == '&'){
           return match[0]
         }else{
-          match[idx]
+          return match[idx]
         }
       })
       result += replacement
@@ -355,7 +355,7 @@ String.prototype.mysearch = function(target){
     }
   }
 }
-RegExp.prototype.mytest = function(){
+RegExp.prototype.mytest = function(str){
   if(this.exec(str)){
     return true
   }else{
