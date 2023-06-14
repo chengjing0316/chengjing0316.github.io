@@ -1,95 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>regex101</title>
+  <title>101</title>
   <style>
-    input, textarea, label, pre{
+    input,
+    textarea,
+    label,
+    pre {
       font-family: consolas;
     }
-    pre  b:nth-child(odd) {
-      background-color:#d5ebff;
+
+    pre b:nth-child(odd) {
+      background-color: #d5ebff;
     }
-    pre  b:nth-child(even) {
-      background-color:#9fcfff;
+
+    pre b:nth-child(even) {
+      background-color: #9fcfff;
     }
-    /* 零宽断言的红色条 */
-    pre  em{
-      border-left: 4px dotted pink;
-      margin-left: -2px;
-      margin-right: -2px;
-      filter: blur(0.4px);
-      position: relative;
-      z-index: 2;
-      xdisplay: inline-block;
-      pointer-events: none;
-      height: 1em;
-      vertical-align: bottom;
-      transition: .5s;
-    }
-    pre > em:hover{
-      border-color: magenta;
-      box-shadow:0 0 5px grey;
-    }
-    pre b {
-      font-style: normal;
-    }
-    pre b[data-group='1'] {
-      --group-color: #9fcba1;
-    }
-    pre d[data-group='2'] {
-      --group-color: #e0bf8b;
-    }
-    pre d[data-group='3'] {
-      --group-color: #acadfc;
-    }
-    pre d[data-group='4'] {
-      --group-color: #e1abf5;
-    }
-    pre d[data-group='5'] {
-      --group-color: #ef9b95;
-    }
-    pre > b:nth-of-type(odd) b{
-      background-color: color-mix(in srgb, var(--group-color) 60%, white);
-    }
-    pre > b:nth-of-type(even) b {
-      background-color: var(--group-color);
-    }
-    pre b:hover:not(:has(:hover))::before{
-      content: 'Match ' attr(data-match) '\A-------\AGroup ' attr(data-group) ': ' attr(data-group-content) '\A' 'Pos: ' attr(data-group-start-index) '-' attr(data-group-end-index);
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translate(-50%);
-      white-space: pre;
-      background-color: black;
-      border-radius: 5px;
-      color: white;
-      font-size: 12px;
-      padding: 0.5em;
-      font-weight: normal;
-    }
-    b:hover:not(:has(:hover)){
-      z-index: 8;
-      position: relative;
-      box-shadow:0 0 2px grey,0 0 2px grey,0 0 2px grey,0 0 2px grey,
-                  inset 0 0 2px grey, inset 0 0 2px grey, inset 0 0 2px grey, inset 0 0 2px grey;
-    }
-    b:hover:not(:has(:hover)) b {
-      background-color: transparent;
-    }
-    .result-wrapper{
-      width: 400px;
-      height: 300px;
+
+    .result-wrapper {
+      width: 300px;
+      height: 200px;
       position: relative;
     }
-    textarea, pre {
+
+    textarea,
+    pre {
       box-sizing: border-box;
       position: absolute;
       font-size: 24px;
       padding: 5px;
-      margin:0;
+      margin: 0;
       border: 2px solid;
       border-radius: 2px;
       width: 100%;
@@ -98,140 +42,86 @@
       word-break: break-all;
       white-space: break-spaces;
     }
+
+    em {
+      border-left: 1px solid #000;
+      margin-left: -1px;
+    }
   </style>
 </head>
+
 <body>
   输入正则：<br>
-  <input type="text" id="reInput" value = "foo" oninput="run()"><button onclick="run()">run</button>
-  <br> 
-  <p id="reInputError"></p>
-  <label ><input onclick="run()" id="flagI" type="checkbox">i</label>
-  <label ><input onclick="run()" id="flagG" type="checkbox" checked>g</label>
-  <label ><input onclick="run()" id="flagM" type="checkbox">m</label>
-  <label ><input onclick="run()" id="flagS" type="checkbox">s</label>
-  <label ><input onclick="run()" id="flagU" type="checkbox">u</label>
-  <label ><input onclick="run()" id="flagY" type="checkbox">y</label>
+  <input type="text" id="reInput" value="foo" oninput="run()"><button onclick="run()">run</button>
+  <br>
+  <label><input onclick="run()" id="flagI" type="checkbox">i</label>
+  <label><input onclick="run()" id="flagG" type="checkbox" checked>g</label>
+  <label><input onclick="run()" id="flagM" type="checkbox">m</label>
+  <label><input onclick="run()" id="flagS" type="checkbox">s</label>
+  <label><input onclick="run()" id="flagU" type="checkbox">u</label>
+  <label><input onclick="run()" id="flagY" type="checkbox">y</label>
   <br>
   输入字符串：<br>
   <div class="result-wrapper">
     <pre id="output"></pre>
-    <textarea id="stringInput" cols="30" rows="10" oninput="run()">foo barbaz baafoo baafoobaa</textarea>
-    <input type="text" id="replacement">
-    <pre id="replaceOutput"></pre>
-
+    <textarea id="stringInput" cols="30" rows="10" oninput="run()">foo barbaz baa foobaa foobaa</textarea>
   </div>
   <script>
-    function getFlags(){
+    function getFlags() { //正则表达式中包含的标志
       var flags = ''
-      if(flagI.checked){
+      if (flagI.checked) {
         flags += 'i'
       }
-      if(flagG.checked){
+      if (flagG.checked) {
         flags += 'g'
       }
-      if(flagM.checked){
+      if (flagM.checked) {
         flags += 'm'
       }
-      if(flagS.checked){
+      if (flagS.checked) {
         flags += 's'
       }
-      if(flagU.checked){
+      if (flagU.checked) {
         flags += 'u'
-      } 
-      if(flagY.checked){
+      }
+      if (flagY.checked) {
         flags += 'y'
       }
       return flags
     }
-    function run(){
-      output.innerHTML = ''
+    function run() {
       var reSource = reInput.value
-      if(reSource == ''){
-        return
-      }
-      var flags = getFlags()
-      try{
-        var re = new RegExp(reSource, flags + 'd')
-      }catch(e){
-        reInputError.innerHTML = e
-        return 
-      }
-      // var re = new RegExp(reSource, getFlags())  //正则表达式
+      var re = new RegExp(reSource, getFlags())  //正则表达式
       var string = stringInput.value      //获取字符串
       var match
       var lastLastIndex = 0
       var html = ''
-      var matchIndex = 1
       while (match = re.exec(string)) {
-        html += string.slice(lastLastIndex, match.index)  //将数组元素变成字符串输出 
-        if(match[0] == ''){
-          html += '<em></em>'     //零宽断言分割线
-        }else{
-          // html += `<b>${match[0]}</b>`           //匹配到的字符串
-          html += wrapOneMatch(match, matchIndex++)
-        }
+        html += string.slice(lastLastIndex, match.index)  //将匹配到的元素之前的部分拼接到html中
+        if (match[0] == '') {
+          html += `<em></em>`
+        } else{
+          html += `<b>${match[0]}</b>` //匹配到的字符串
+        } 
         lastLastIndex = re.lastIndex
-        if(match[0] == ''){//匹配长度为零的时候，lastIndex是不变的 
+        if(match[0] == ''){
           re.lastIndex++
         }
-
-        if(!re.global){
+        if (!re.global) {
           lastLastIndex = match.index + match[0].length
           break
         }
       }
       html += string.slice(lastLastIndex)
       output.innerHTML = html
-
-      replaceOutput.innerHTML = string.replace(re, replace.value)
     }
-
-    // function wrapOneMatch(match){
-    //   var result = ''
-    //   var indices = match.indices.map(([start,end]) => {
-    //     return [start - match.index, end - match.index]
-    //   })
-    //   var fullMatch = match[0]
-    //   var result = ''
-    //   var preEnd = 0
-    //   for(var i = 1; i < match.indices.length; i++){
-    //     var index = indices[i]
-    //     var [start, end] = index
-    //     result += fullMatch[0].slice(preEnd, start)
-    //     result += '<i>' + fullMatch[0].slice(start, end) + '</i>'
-    //     prevEnd = end
-    //   }
-    //   result += fullMatch[0].slice(prevEnd)
-
-    //   return '<b>' + result + '</b>'
-    // }
-    function wrapOneMatch2(match, matchIndex){
-      var indices = match.indices.map(([start,end]) => {
-        return [start - match.index, end - match.index]
-      })
-      var fullMatch = match[0]
-      var chars = fullMatch.split('')
-      var tags = Array(chars.length + 1).fill('')
-      for(var i = 1; i <indices.length; i++){
-        var [start, end] = indices[i]
-        tags[start] += `<b data-match="${matchIndex}" data-group="${i}" data-group-content="${match[i]}" data-group-start-index="${match.indices[i][0]} data-group-end-index"${match.indices[i][1]}>`
-        tags[end] += '</b>'
-      }
-      var result = ''
-      for(var i = 0; i < chars.length; i++){
-        result += tags[i] + chars[i]
-      }
-      result += tags[i]
-
-      return `<b data-match="${matchIndex}" data-group="0" data-group-content="${match[0]}" data-group-start-index="${match.indices[0][0]}" data-group-end-index="${match.indices[0][1]}">` + result + '</b>'
-    }
-
-
     run()
+
+    function wrapOneMatch(){
+      
+    }
   </script>
+
 </body>
+
 </html>
-
-
-
-
