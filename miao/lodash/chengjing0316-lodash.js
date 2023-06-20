@@ -347,7 +347,58 @@ var chengjing0316 = {
     }
     return arr
   },
-  filter: function(){
-
+  filter: function(collection, iteratee){
+    let arr = []
+    if(typeof(iteratee) == 'function'){
+      let func1 = iteratee
+      iteratee = e => func1(e)
+    }
+    if(typeof(iteratee) == 'object'){
+      let func2 = iteratee
+      iteratee = e => e[func2]
+    }
+    if(typeof(iteratee) == 'string'){
+      let func3 = iteratee
+      iteratee = e => e[func3]
+    }
+    for(let item in collection){
+      if(iteratee(collection[item])){
+        arr.push(collection[item])
+      }
+    }
+    return arr
+  },
+  reduce: function(collection, iteratee, accumulator = 0){
+    for(let item in collection){
+      accumulator = iteratee(accumulator, collection[item], item)
+    }
+    return accumulator
+  },
+  reduceRight: function(collection, iteratee, accumulator = 0){
+    if(Array.isArray(collection)){
+      for(let i = collection.length - 1; i >= 0; i--){
+        accumulator = iteratee(accumulator, collection[i], i)
+      }
+    }else{
+      var arr = Object.keys(collection)
+      for(let i = arr.length - 1; i >= 0; i--){
+        accumulator = iteratee(accumulator, collection[arr[i]], arr[i])
+      }
+    }
+    return accumulator
+  },
+  size: function(collection){
+    if(typeof(collection) == "string" || Array.isArray(collection)){
+      return collection.length
+    }else{
+      let count = 0
+      for(var item in collection){
+        count++
+      }
+      return count
+    }
+  },
+  sortBy: function(collection, iteratee){
+    
   }
 }

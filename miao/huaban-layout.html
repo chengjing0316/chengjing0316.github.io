@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>huaban</title>
   <style>
-        section {
+    section {
       display: flex;
       gap: 10px;
       align-items: flex-start;
-      width: 600px;
       margin: auto;
     }
     section div {
@@ -351,32 +350,71 @@
         "height": 1170
       }
   ]
+    var section = document.querySelector("section")
+
+    // var prevWidth = 0
     function run(){
-      var columns = Math.floor((window.innerWidth - 60) / 180) // 计算需要多少列
-      var section = document.querySelector('section')   //选中section
-      section.style.width = columns * 180 + 10 * (columns - 1) + 'px'  //计算section所需宽度,这里是style.width,要加‘px’
-      section.innerHTML = '' // 清空section元素
-      for(var i = 0; i < columns; i++){
+      // if (window.innerWidth == prevWidth) {
+      //   return
+      // } else {
+      //   prevWidth = window.innerWidth
+      // }
+      var columns = Math.floor(window.innerWidth / 180)   //计算显示多少列
+      section.innerHTML = ''
+      for(var i = 0; i < columns; i++){                 //创建每列所需div元素
         section.append(document.createElement('div'))
       }
-      var divs = [...section.querySelectorAll('div')]
+      var divs = [...section.querySelectorAll('div')] //解构
+      var divHeights = new Array(columns).fill(0)   //用于记录每个div高度
+      var imgStorage = new Array(columns).fill(0).map(it => [])
+      var columnWidth = divs[0].offsetWidth
       for(var cat of cats){
-        var div = divs.reduce((min, div) => {
-          if(min.offsetHeight < div.offsetHeight){
-            return min
-          }else{
-            return div
-          }
-        })
-        var img = document.createElement('img')
+        var minDivHeight = Math.min(...divHeights)    //找到最短的div
+        var minIdx = divHeights.indexOf(minDivHeight)
+
+        var img = document.createElement('img')   //创建出img元素
         img.src = cat.fullUrl
-        img.width = div.offsetWidth
-        img.height = img.width * cat.height / cat.width
-        div.append(img)
+        img.width = columnWidth
+        img.height = columnWidth * cat.height / cat.width
+
+        divHeights[minIdx] += img.height + 10     //记录div的累计高度
+        imgStorage[minIdx].push(img)
       }
+
+      imgStorage.forEach((imgs, idx) => {
+        divs[idx].append(...imgs)       //最后在div里创建img
+      })
+      /*（1）先根据窗口宽度和每列宽度计算显示多少列
+        （2）然后创建每列所需div元素
+        （3）创建两个数组，一个存div高度，另一个存创建的img节点
+        （4）找到最短的div，根据要存入的图片高度，计算新的高度
+      */
     }
     run()
     window.onresize = run
+
+
+    var z = 5
+    section.addEventListener('click', function(e){
+      if(e.target.matches('img')){
+        var img = e.target
+        var box = img.getBoundingClientRect()
+        var cx = box.left + box.width / 2
+        var cy = box.top + box.height / 2
+        var vx = window.innerWidth / 2
+        var vy = window.innerHeight / 2
+        var movex = vx - cx
+        var movey = vy - cy
+        var zoomx = window.innerWidth / box.width
+        var zoomy = window.innerHeight / box.height
+        img.style.zIndex = z++
+        img.style.position = 'relative'
+        img.style.transition = '0.3s'
+        img.style.transform = `translate(${movex}px, ${movey}px) scale(${Math.min(zoomx, zoomy)})`
+      }
+    }) 
+
+    
   </script>
 
 </body>

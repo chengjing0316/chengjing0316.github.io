@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events</title>
+  <style>
+    .fire{
+      position: fixed;
+      width: 15px;
+      height: 15px;
+      border-radius: 999px;
+      background-color:red;
+    }
+    .mouse-shadow{
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      position: fixed;
+    }
+    .draggable{
+      position: fixed;
+      .title{
+        background-color:rgb(76, 74, 72);
+        font-size: 14px;
+        cursor: move;
+        margin: 0;
+      }
+      .resize{
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        bottom: 0;
+        right: 0;
+        cursor: nwse-resize;
+      }
+    }
+  </style>
+</head>
+<body>
+  <input type="text">
+  <div class="draggable" style="background-color:#ddd; top: 0; left: 0;width: 100px; height: 100px;">
+    <h1 class="title">窗口1</h1>
+    <span class="resize"></span>
+  </div>
+  <div class="draggable" style="background-color:#eee; top: 0; left: 0;width: 100px; height: 100px;">
+    <h1 class="title">窗口2</h1>
+    <span class="resize"></span>
+  </div>
+  <div class="draggable" style="background-color:#ccc; top: 0; left: 0;width: 100px; height: 100px;">
+    <h1 class="title">窗口3</h1>
+    <span class="resize"></span>
+  </div>
+  <!-- 习题一：键盘按键 -->
+  <script type="ok">
+    var input = document.querySelector("input")
+      //防止键盘直接输入
+    input.addEventListener('keypress', e => {
+      if(e.key == "Q" || e.key == "W" || e.key == "X"){
+        e.preventDefault()
+      }
+    })
+      //防止粘贴输入
+    input.addEventListener("paste", e => {
+      var text = e.clipboardData.getData('text/plain')
+      text = text.replace(/[QWX]/g,"*")
+      var selectionStart = input.selectionStart
+      input.value = input.value.slice(0, input.selectionStart) + text + input.value.slice(input.selectionStart)
+      input.selectionStart = input.selectionEnd = selectionStart + text.length
+      e.preventDefault()
+    })
+    //防止在控制台输入
+    var valueDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), "value")
+    Object.defineProperty(input, 'value', {
+      get: function(){
+        return valueDescriptor.get.call(this)  //调用父构造函数的call方法来实现继承
+        //input.value
+      },
+      set:function(text){   //同上
+        valueDescriptor.set.call(this, text.replace(/[WQX]/g, "*"))
+        //input.value = text.replace(...)
+      }
+    })
+  </script>
+
+
+  <!-- 习题二：鼠标轨迹 -->
+  <script type="ok">
+    var mx = 0
+    var my = 0
+    var prevTime = 0
+    window.addEventListener('mousemove', e => {
+      mx = e.clientX
+      my = e.clientY
+      if(Date.now() - prevTime >= 16){
+        prevTime = Date.now()
+        var mouseShadow = document.createElement('span')
+        mouseShadow.className = 'mouse-shadow'
+        mouseShadow.style.left = e.clientX + "px"
+        mouseShadow.style.top = e.clientY + "px"
+        document.body.append(mouseShadow)
+        setTimeout(() => {
+          document.body.removeChild(mouseShadow)
+        }, 16 * 8)
+      }
+    })
+  </script>
+
+  <!-- 习题三：选项卡界面 -->  
+
+
+
+  
+  <!-- 风火轮 -->
+  <script type="ok">
+    for(let i = 0; i < 3; i++){
+      var fire = document.createElement("div")
+      fire.className = "fire"
+      document.body.append(fire)
+    }
+    var cx = window.innerWidth / 2
+    var cy = window.innerHeight / 2
+    window.addEventListener("mousemove", e => {
+      cx = e.clientX
+      cy = e.clientY
+    })
+    var fires = document.querySelectorAll(".fire")
+    requestAnimationFrame(function animate(time){
+      var angle0 = time / 100
+      fires[0].style.left = Math.sin(angle0) * 60 + cx + "px"
+      fires[0].style.top = Math.cos(angle0) * 60 + cy + "px"
+      var angle1 = angle0 + 2 * Math.PI / 3
+      fires[1].style.left = Math.sin(angle1) * 60 + cx + "px"
+      fires[1].style.top = Math.cos(angle1) * 60 + cy + "px"
+      var angle2 = angle1 + 2 * Math.PI / 3
+      fires[2].style.left = Math.sin(angle2) * 60 + cx + "px"
+      fires[2].style.top = Math.cos(angle2) * 60 + cy + "px"
+      requestAnimationFrame(animate)
+    })
+  </script>
+
+
+  <!-- 拖拽窗口 -->
+  <script>
+    var startX, startY, el              // 鼠标起始位置
+    var elStartX, elStartY              // 元素起始位置
+    var elStartWidth, elStartHeight     // 元素起始宽高
+    var z = 1                           // 设置z-Index初始值
+    window.addEventListener("mousedown", e => {
+      if(e.target.matches(".draggable, .draggable *")){   //选中的元素出现在最上层，zIndex最大
+        e.target.closest(".draggable").style.zIndex = z++
+      }
+      if(e.target.matches(".draggable .title")){   
+        e.preventDefault()
+        el = e.target.closest(".draggable")      //获取到离e.target最近的满足.draggable选择器的祖先元素
+        startX = e.clientX
+        startY = e.clientY
+        elStartX = parseFloat(el.style.left)
+        elStartY = parseFloat(el.style.top)
+        window.addEventListener('mousemove', moved)
+        console.log("move ok")
+      }
+      if(e.target.matches(".draggable .resize")){
+        e.preventDefault()
+        el = e.target.closest(".draggable")
+        elStartWidth = parseFloat(el.style.width)
+        elStartHeight = parseFloat(el.style.height)
+        startX = e.clientX
+        startY = e.clientY
+        window.addEventListener("mousemove", onResize)
+      }
+    })
+
+    function moved(e){
+      var left,top
+      if(event.which != 1){
+        window.removeEventListener("mousemove", moved)
+      }else{
+        var moveX = e.clientX - startX
+        var moveY = e.clientY - startY
+        if(e.clientX == window.innerWidth){
+          var h = el.style.top
+        }
+        if(e.clientY == window.innerHeight){
+          var w = el.style.left
+        }
+        if(e.clientX > window.innerWidth || e.clientX < 0){       //超出左右窗口时停止移动
+          left = elStartX + moveX
+          top = h
+        }else if(e.clientY > window.innerHeight || e.clientY < 0){//超出上下窗口时停止移动
+          left = w
+          top = elStartY + moveY
+        }else{  //正常移动
+          left = elStartX + moveX
+          top = elStartY + moveY
+        }
+
+      }
+      if(left < 30){                                 //考虑拖出四边窗口的情况
+        left = 0
+      }
+      if(left > window.innerWidth - el.offsetWidth - 30){
+        left = window.innerWidth - el.offsetWidth
+      }
+      if(top < 30){                                  
+        top = 0
+      }
+      if(top > window.innerHeight - el.offsetHeight - 30){
+        top = window.innerHeight - el.offsetHeight
+      }
+      el.style.left = left + "px"
+      el.style.top = top + "px"
+    }
+    function onResize(e){   // 窗口缩放
+      if(event.which != 1){
+        window.removeEventListener("mousemove", onResize)
+      }else{
+        var moveX = e.clientX - startX
+        var moveY = e.clientY - startY
+
+        var width = elStartWidth + moveX
+        var height = elStartHeight + moveY
+
+        if (width < 30) {  //限制宽度
+          width = 30
+        }
+        if (height < 30) {  //限制高度
+          height = 30
+        }
+        el.style.width = width + 'px'
+        el.style.height = height + 'px'
+        console.log(elStartWidth)
+      }
+    }
+  </script>
+</body>
+</html>
