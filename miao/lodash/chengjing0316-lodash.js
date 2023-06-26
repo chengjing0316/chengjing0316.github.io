@@ -1,4 +1,90 @@
 var chengjing0316 = {
+  isMatch:function(object, source){
+    for(var key in source){
+      if(typeof source[key] == 'object'){
+        if(!this.isMatch(object[key], source[key])){
+          return false
+        }
+      }else{
+        if(object[key] !== source[key]){
+          return false
+        }
+      }
+    }
+    return true
+  },
+  property:function(name){
+    return function(obj){
+      return obj[name]
+    }
+  },
+  matches:function(source){
+    return function(object){
+      return this.isMatch(object,source)
+    }
+  },
+  matchesProperty:function(path, srcValue){
+    return function(object){
+      return this.isMatch(object[path],srcValue)
+    }
+  },
+  iteratee:function(predicate){
+    var func = predicate
+    if(typeof predicate === 'string'){
+      func = this.property(predicate)
+    }else if(Array.isArray(predicate)){
+      func = this.matchesProperty(predicate)
+    }else if(typeof predicate === 'object'){
+      func = this.matches(predicate)
+    }
+    return func
+  },
+  identity:function(){
+    
+  },
+  get:function(obj, path, defaultValue){
+
+  },
+  has:function(){
+
+  },
+  set:function(){
+    
+  },
+  topath:function(){
+
+  },
+  differenceBy:function(array, values, iteratee){
+
+  },
+  differenceWith:function(array, values,comparator){
+
+  },
+  uniq:function(){
+
+  },
+  uniqBy:function(){
+
+  },
+  uniqWith:function(array, comparator){
+    
+  },
+  cloneDeep:function(value){
+    if(typeof obj == 'object'){
+
+    }
+  },
+  sum:function(array){
+    return array.reduce((sum, val) => sum + val)
+  },
+  sumBy:function(array, iterator){
+    var result = 0
+    iterator = this.iteratee(iterator)
+    for(var i = 0; i < array.length; i++){
+      result += iterator(array[i])
+    }
+    return result
+  },
   chunk: function (ary, size) {
     let result = []
     for(i = 0; i < ary.length; i += size){
@@ -347,26 +433,15 @@ var chengjing0316 = {
     }
     return arr
   },
-  filter: function(collection, iteratee){
-    let arr = []
-    if(typeof(iteratee) == 'function'){
-      let func1 = iteratee
-      iteratee = e => func1(e)
+  filter: function(array, predicate){
+    var func = this.iteratee(predicate)
+    var result = []
+    for(var i = 0; i < array.length; i++){
+      if(func(array[i], i, array)){
+        result.push(array[i])
+      } 
     }
-    if(typeof(iteratee) == 'object'){
-      let func2 = iteratee
-      iteratee = e => e[func2]
-    }
-    if(typeof(iteratee) == 'string'){
-      let func3 = iteratee
-      iteratee = e => e[func3]
-    }
-    for(let item in collection){
-      if(iteratee(collection[item])){
-        arr.push(collection[item])
-      }
-    }
-    return arr
+    return result
   },
   reduce: function(collection, iteratee, accumulator = 0){
     for(let item in collection){
