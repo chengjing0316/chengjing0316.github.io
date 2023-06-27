@@ -20,12 +20,13 @@ var chengjing0316 = {
   },
   matches:function(source){
     return function(object){
-      return this.isMatch(object,source)
+      var self = this
+      return self.isMatch(object,source)
     }
   },
   matchesProperty:function(path, srcValue){
     return function(object){
-      return this.isMatch(object[path],srcValue)
+      return chengjing0316.isMatch(object[path],srcValue)
     }
   },
   iteratee:function(predicate){
@@ -39,11 +40,18 @@ var chengjing0316 = {
     }
     return func
   },
-  identity:function(){
-    
+  identity:function(arg){
+    return arg
   },
   get:function(obj, path, defaultValue){
-
+    for(var key of path){
+      if(obj != undefined){
+        obj = obj[key]
+      }else{
+        return defaultValue
+      }
+    }
+    return obj
   },
   has:function(){
 
@@ -74,10 +82,47 @@ var chengjing0316 = {
 
     }
   },
+  parseJSON:function(){
+
+  },
+  stringifyJSON:function(){
+
+  },
+  isPlainObject:function(value){
+
+  },
+  sortedIndex:function(array, value){
+
+  },
+  sortedUniq:function(array){
+    var result = [array[0]]
+
+  },
+  sortedUniqBy:function(array, iteratee){
+
+  },
+  shuffle:function(collection){
+
+  },
+  once:function(once){
+
+  },
+  negata:function(){
+
+  },
+  ary:function(){
+
+  },
+  unary:function(){
+
+  },
+  flip:function(){
+
+  },
   sum:function(array){
     return array.reduce((sum, val) => sum + val)
   },
-  sumBy:function(array, iterator){
+  sumBy:function(array, iterator = this.identity){
     var result = 0
     iterator = this.iteratee(iterator)
     for(var i = 0; i < array.length; i++){
@@ -433,7 +478,7 @@ var chengjing0316 = {
     }
     return arr
   },
-  filter: function(array, predicate){
+  filter: function(array, predicate = this.identity){
     var func = this.iteratee(predicate)
     var result = []
     for(var i = 0; i < array.length; i++){
