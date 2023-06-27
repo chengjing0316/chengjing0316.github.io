@@ -26,8 +26,8 @@ var chengjing0316 = {
   },
   matchesProperty:function(path, srcValue){
     return function(object){
-      return chengjing0316.isMatch(object[path],srcValue)
-    }
+      return this.isMatch(object[path],srcValue)
+    }.apply(this)
   },
   iteratee:function(predicate){
     var func = predicate
