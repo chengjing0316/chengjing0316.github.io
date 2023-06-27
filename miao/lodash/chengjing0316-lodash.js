@@ -19,8 +19,8 @@ var chengjing0316 = {
     }
   },
   matches:function(source){
+    var self = this
     return function(object){
-      var self = this
       return self.isMatch(object,source)
     }
   },
