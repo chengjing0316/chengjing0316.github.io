@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regexper作业</title>
+  <style>
+    body {
+      background-color: #6b6659;
+      margin: 0;
+      padding: 0;
+      font-size: 25px;
+    }
+    header{
+      width: 100%;
+      height: 130px;
+      background-color: rgb(165, 193, 75);
+      margin: 0;
+      >h1{
+        margin:0;
+      }
+    }
+    main{
+      margin: auto;
+      width: 100%;
+      #allInput{
+        width: 95%;
+        margin:20px 30px 5px;
+        display: block;
+        background-color: rgb(203, 203, 186);
+        outline: none;
+        font-size: 15px;
+        font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+      }
+      >section{
+          font-size:15px;
+          >button{
+            margin-left: 30px;
+            width: 100;
+            height: 26px;
+            background-color: #bada55;
+          }
+        }
+    }
+    svg {
+      background-color: #fff;
+      /* border: 1px solid; */
+      display: block;
+      margin: auto;
+      width: 95%;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>REGEXPER</h1>
+  </header>
+  <main>
+    <textarea id="allInput">(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaaa</textarea>
+    <section>
+      <button onclick="draw()">Display</button>
+    </section>
+    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"></svg>
+  </main>
+  <footer></footer>
+  <script>
+    var svg = document.querySelector('svg')
+    var textarea = document.querySelector('textarea')
+    function draw(){
+      svg.innerHTML = ''  //第二次绘制之前应该清空
+      var node = parseAll(textarea.value)
+      var graph = drawAll(node)
+      var box = graph.getBBox()
+      svg.setAttribute('width',box.width)
+      svg.setAttribute('height',box.height)
+    }
+
+    function parseAll(input){
+      //node-Type:'Quantifier/CaptureGroup/Character/CharacterClass/Branch/...'
+      //'fo+o{2,4}   (bar|baz|baa)  [baz]+'
+      // '(foo){2,55}?foo(b(ar)|baz|baa)[baz]' // '(foo+|()|aaaa)*b(a[a-z0-9_-]){2,}?(baz|baa)+|baaaa'
+      var str = input
+      var i = 0
+      var groupIndex = 1 //全局分组编号？？
+      var branches = parseBranches()
+      return{
+        type: 'All',
+        start:0,
+        end:input.length,
+        raw:input,
+        branches:branches,
+      }
+      function parseOnePart(){
+      if(str[i] == '('){
+        return parseCaptureGroup()
+      }else if(str[i] == '['){
+        return parseCharacterClass()
+      }else if(str[i] == '{' || str[i] == '*' || str[i] == '+' || str[i] == '?'){
+        return parseQuantifier()
+      }//else if(str[i] == '\\'){
+      //   return parseEscape
+      // }
+      return parseCharacter()
+    }
+
+      function parseCaptureGroup(){
+      let node = {
+        type: 'CaptureGroup',
+        start: i,
+        end: 0,
+        raw: "",
+        branches: [],
+        assertion:false,  //是否零宽断言
+        positive:true,    //是否正向零宽断言
+        lookahead:true,   //先行或后行断言，true为先行，false为后行
+        groupIndex: -1,   //分组编号
+        groupName:undefined,//分组名称
+        nonCapture:false, //是否为非捕获分组
+      }
+      i++   //跳过'('
+      if(str[i] == '?'){
+        i++
+        if(str[i] == ':'){  //非捕获分组
+          i++
+          node.nonCapture = true
+        }else if(str[i] == '='){  //先行断言
+          i++
+          node.assertion = true
+        }else if(str[i] == '!'){   //正向否定查找
+          i++
+          node.assertion = true
+          node.positive = false
+        }else if(str[i] == '<'){
+          i++
+          if(str[i] == '!'){    //反向否定查找
+            i++
+            node.assertion = true
+            node.positive = false
+            node.lookahead = false
+          }else if(str[i] == '='){ //后行断言
+            i++
+            node.assertion = true
+            node.lookahead = false
+          }else{                    //具名分组情况
+            var groupName = parseGroupName()
+            if(groupName == ''){  //分组名不能为空，否则抛出错误
+              throw new SyntaxError('分组名称不能为空，位置 ' + i)
+            }
+            node.groupName = groupName
+            i++
+          }
+        }
+      }
+      if (!node.nonCapture) {
+          node.groupIndex++
+      }
+      var branches = parseBranches()
+      node.branches = branches
+      i++
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+      function parseGroupName(){
+      var start = i
+      while(str[i] !== '>'){
+        i++
+      }
+      return str.slice(start, i)
+    }
+      function parseBranches(){
+      var branches = []
+      if(str[i] == ')'){
+        return branches
+      }
+      while(i < str.length){
+        var branch = parseBranch()
+        branches.push(branch)
+        if(str[i] == ')'){
+          break
+        }
+        if(str[i] == '|'){
+          i++
+          continue
+        }
+      }
+      return branches
+    }
+      function parseBranch(){
+      var node = {
+        type: 'Branch',
+        start: i,
+        end:0,
+        raw: '',
+        parts: [],
+      }
+      if(str[i] == '|' || str[i] == ')' || i >= str.length){
+        node.end = i
+        node.raw = str.slice(node.start, node.end)
+        return node
+      }
+      while(true){
+        var part = parseOnePart()
+        if(part.type == 'Quantifier'){
+          var repeatTarget = node.parts.pop()
+          if(repeatTarget == undefined){
+            throw new SyntaxError('错误的正则')
+          }
+          if(repeatTarget.type == 'Quantifier'){
+            throw new SyntaxError('错误，量词不允许连续出现')
+          }
+          part.repeatTarget = repeatTarget
+          part.start = repeatTarget.start
+          part.raw = str.slice(part.start, part.end)
+        }
+        node.parts.push(part)
+        if(str[i] == '|' || str[i] == ')' || i >= str.length){
+          break
+        } 
+      }
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+      function parseCharacter(){
+      var node = {
+        type: 'Character',
+        start:i,
+        end:0,
+        raw:'',
+        char:str[i]
+      }
+      i++
+      node.end =  i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+      function parseCharacterClass(){
+      var node = {
+        type: 'CharacterClass',
+        start: i,
+        end: 0,
+        raw: '',
+        characters: [],
+        invert: false,    //是否取反
+      }
+      i++
+      if(str[i] == '^'){
+        node.invert = true
+        i++
+      }
+      while(true){
+        if(str[i] == ']'){
+          i++
+          break
+        }
+        var char = parseCharacter()
+        node.characters.push(char)
+        if(str[i] == '-'){
+          i++ 
+          if(str[i] == ']'){  //  ‘-’后直接跟着‘]’,无意义，只是个普通符号
+            i--   //(foo){2,55}?foo(b(ar)|baz|baa)[baz]' // '(foo+|()|aaaa)*b(a[a-z0-9_-]){2,}?(baz|baa)+|baaaa
+            var char = parseCharacter()   
+            node.characters.push(char)    // 把-存进去
+            continue
+          }
+          var char = parseCharacter()
+          var prevChar = node.characters.pop()
+          if(char.char < prevChar.char){
+            throw new SyntaxError('RangeError')
+          }
+          var rangeNode = {
+            type: 'CharacterRange',
+            start: prevChar.start,
+            end:char.end,
+            raw: str.slice(prevChar.start, char.end),
+            startChar:prevChar,
+            endChar:char,
+          }
+          node.characters.push(node)
+        }
+      }
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+
+      function parseQuantifier(){
+      var node = {
+        type: "Quantifier",
+        start: i,
+        end: 0,
+        raw: '',
+        min: 0,
+        max: Infinity,
+        repeat: null,
+        greedy:true,
+        repeatTarget:null,
+      }
+      if(str[i] == '+'){
+        node.min = 1
+        i++
+      }else if(str[i] == '?'){
+        node.max = 1
+        i++
+      }else if(str[i] == '*'){
+        i++
+      }else if(str[i] == '{'){
+        i++
+        node.min = parseInteger()
+        if(str[i] == '}'){
+          node.max = node.min
+          i++
+        }else if(str[i] == ','){
+          i++
+          if(str[i] == '}'){
+            i++
+          }else{
+            node.max = parseInteger()
+            i++
+          }
+        }
+      }
+      if(str[i] == '?'){
+        node.greedy = false
+        i++
+      }
+      node.end = i
+      node.raw = str.slice(node.start, node.end)
+      return node
+    }
+      function parseInteger(){
+      var start = i
+      while(str[i] >= '0' && str[i] <= '9'){
+        i++
+      }
+      return parseInt(str.slice(start, i))
+    }
+    }
+     
+    
+    //画图
+    function drawAll(node){
+      var graphPadding = 10
+      function add(a, b) {
+        return a + b
+      }
+      function svgElt(tagName, attrs = {}){//用于创建SVG元素
+        var tag = document.createElementNS('http://www.w3.org/2000/svg',tagName)
+        svg.appendChild(tag)
+        for(var [key,val] of Object.entries(attrs)){
+          tag.setAttribute(key, val)
+        }
+        return tag
+      }
+      return drawAllGraph(node)
+      // var node = parseAll('a') 调试语句
+      // drawCharacterGraph(node.branches[0].parts[0])
+      function drawCharacterGraph(node){ //画字符的框，用g标签包裹住
+        var text = svgElt('text',{//创建text元素，并添加属性
+          x:0,
+          y:0,
+          'dominant-baseline':'text-before-edge',
+        })
+        text.textContent = node.char
+        var box = text.getBBox()
+        var width = box.width + 10 * 2
+        var height = box.height + 5 * 2
+        text.setAttribute('transform',`translate(${(width - box.width) / 2}, ${(height - box.height) / 2})`)
+        var rect = svgElt('rect', {//创建带属性的rect元素
+          x:0,
+          y:0,
+          rx:3,
+          fill:'#dae9e5',
+          width:width,
+          height:height,
+        })
+        var g = svgElt('g')
+        g.appendChild(rect)
+        g.appendChild(text)
+        return g
+      }
+
+
+      // var node = parseAll('[abcd]') 调试语句
+      // drawCharacterClassGraph(node.branches[0].parts[0])
+      function drawCharacterClassGraph(node){
+        var graphs = node.characters.map(drawCharacterGraph)//获取每个字符
+        var boxes = graphs.map(it => it.getBBox())    //获取字符大小信息
+        var width = Math.max(...boxes.map(it => it.width)) + 2 * graphPadding//计算边框大小
+        var height = boxes.map(it => it.height).reduce(add,0) + (boxes.length + 1) * graphPadding
+        var rect = svgElt('rect', { //创建边框元素，赋予大小、颜色等属性
+          width: width,
+          height: height,
+          fill: '#cbcbba',
+          rx: 3,
+        })
+        var g = svgElt('g') //创建g元素
+        g.appendChild(rect)//将字符节点包进g元素中
+
+        var y = graphPadding
+        graphs.forEach((graph, idx) => {//分别计算每个字符节点的位置信息，进行排列布局
+          graph.setAttribute('transform',`translate(${(width - boxes[idx].width) / 2},${y})`)//给每个元素定位
+          y += boxes[idx].height + graphPadding
+          g.appendChild(graph)//将整个字符集包进g元素中
+        })
+        return g
+      }
+    
+
+      // var node = parseAll('a[abcd]d[abc]')调试语句
+      // drawNodeGraph(node.branches[0])
+      function drawBranchGraph(node){//先绘制出当前分支的每一部分图形
+        var graphs = node.parts.map(it => drawNodeGraph(it))
+        var boxes = graphs.map(it => it.getBBox())
+        var width = boxes.map(it => it.width).reduce(add,0) + graphPadding * (graphs.length + 1)
+        var height = Math.max(...boxes.map(it => it.height)) + graphPadding * 2
+        var rect = svgElt('rect', {
+          width:width,
+          height:height,
+          fill:'none',
+          rx:3,
+        })
+        var g = svgElt('g')
+        g.appendChild(rect)
+
+        var line = svgElt('line', {//画线
+            x1: 0,
+            y1: height / 2,
+            x2: width,
+            y2: height / 2,
+            stroke: 'black',
+          })
+          g.appendChild(line)
+
+        var x = graphPadding
+        graphs.forEach((graph, i) => {
+          graph.setAttribute('transform', `translate(${x}, ${(height - boxes[i].height) / 2})`)
+          x += boxes[i].width + graphPadding
+          g.appendChild(graph)
+        })
+        return g
+      }
+
+
+      // var node = parseAll('abc|dssef|ghj')测试用例
+      // drawNodeGraph(node.branches)
+      function drawBranchesGraph(nodes){//绘制多个并列分支
+        var graphs = nodes.map(drawBranchGraph)
+        var boxes = graphs.map(it => it.getBBox())
+        var width = Math.max(...boxes.map(it => it.width)) + 4 * graphPadding
+        var height = boxes.map(it => it.height).reduce(add, 0) + graphPadding * (boxes.length + 1)
+        var rect = svgElt('rect', {
+          width:width,
+          height:height,
+          fill:'none',
+          rx:3,
+        })
+        var g = svgElt('g')
+        g.appendChild(rect)
+        var y = graphPadding
+        graphs.forEach((graph, i) => {
+          var x = (width - boxes[i].width) / 2
+          graph.setAttribute('transform', `translate(${x}, ${y})`)
+          var line = svgElt('path', {//画线
+            d:`M 0,${height /2}
+               C ${graphPadding},${height/2} ${graphPadding},${y + boxes[i].height / 2} ${graphPadding + graphPadding},${y + boxes[i].height / 2}
+               L ${x} ${y + boxes[i].height / 2}
+               M ${width} ${height / 2}
+               C ${width - graphPadding} ${height / 2} ${width - graphPadding} ${y + boxes[i].height / 2} ${width - (graphPadding + graphPadding)} ${y + boxes[i].height / 2}
+               L ${width - x} ${y + boxes[i].height / 2}
+            `,
+            stroke: 'black',
+            fill:'none'
+          })
+          g.appendChild(line)
+          g.appendChild(graph)
+          y += boxes[i].height + graphPadding
+        })
+        return g
+      }
+
+
+      // var node = parseAll('(abc|dssef|ghj|poddaaafwebdgfg)')
+      // drawNodeGraph(node.branches[0].parts[0])
+      function drawCaptureGroupGraph(node){
+        var branchesGraph = drawBranchesGraph(node.branches)
+        var box = branchesGraph.getBBox()
+        var width = box.width + 2 * graphPadding
+        var height = box.height
+        var rect = svgElt('rect', {
+          width,
+          height,
+          stroke:'#908c83',
+          fill:'none',
+          "stroke-dasharray": '6 2',
+        })
+        var g = svgElt('g')
+        g.appendChild(rect)
+
+        var line = svgElt('path',{
+          fill:'none',
+          stroke:'black',
+          d:`
+            M 0 ${height/2}
+            L ${graphPadding} ${height / 2}
+            M ${width} ${height / 2}
+            L ${width - graphPadding} ${height / 2}
+          `
+        })
+        g.appendChild(line)
+        branchesGraph.setAttribute('transform',`translate(${graphPadding},0)`)
+        g.appendChild(branchesGraph)
+
+        var label = svgElt('text',{
+          x:0,
+          y:0,
+          'font-size':10,
+          'dominant-baseline':"text-before-edge",
+        })
+        label.textContent = 'Group #' + node.groupIndex
+        g.appendChild(label)
+        return g
+      }
+
+
+      // var node = parseAll('(abc)*')
+      // drawNodeGraph(node.branches[0].parts[0])
+      function drawQuantifierGraph(node){
+        var targetGraph = drawNodeGraph(node.repeatTarget)
+        var box = targetGraph.getBBox()
+        var width = box.width + graphPadding * 4
+        var height = box.height + graphPadding * 2
+        var rect = svgElt('rect',{
+          width,height,
+          fill:'none',
+        })
+        var g = svgElt('g')
+        g.appendChild(rect)
+
+        //重复次数为零时，画上方线
+        if(node.min == 0){
+          var upLine = svgElt('path',{
+            fill:'none',
+            stroke:'black',
+            d:`
+              M 0 ${height/2}
+              A ${graphPadding} ${graphPadding} 0 0 0 ${graphPadding} ${height / 2 - graphPadding}
+              L ${graphPadding} ${graphPadding}
+              A ${graphPadding} ${graphPadding} 0 0 1 ${graphPadding * 2} 0
+              L ${width - 2 * graphPadding} 0
+              A ${graphPadding} ${graphPadding} 0 0 1 ${width - graphPadding} ${graphPadding}
+              L ${width - graphPadding} ${height / 2 - graphPadding}
+              A ${graphPadding} ${graphPadding} 0 0 0 ${width} ${height / 2}
+            `
+          })
+          g.appendChild(upLine)
+        }
+
+        //重复次数大于0时，画下方线
+        if(node.max > 1){
+          var downLine = svgElt('path',{
+            fill:'none',
+            stroke:'black',
+            d:`
+              M ${width - 2 * graphPadding} ${height / 2}
+              A ${graphPadding} ${graphPadding} 0 0 1 ${width - graphPadding} ${height / 2 + graphPadding}
+              L ${width - graphPadding} ${height - graphPadding}
+              A ${graphPadding} ${graphPadding} 0 0 1 ${width - graphPadding * 2} ${height}
+              L ${2 * graphPadding} ${height}
+              A ${graphPadding} ${graphPadding} 0 0 1 ${graphPadding} ${height - graphPadding}
+              L ${graphPadding} ${height / 2 + graphPadding}
+              A ${graphPadding} ${graphPadding} 0 0 1 ${2 * graphPadding} ${height / 2}
+            `
+          })
+          g.appendChild(downLine)
+        }
+        var line = svgElt('path',{//补全两根线
+          fill:'none',
+          stroke:'black',
+          d:`
+            M 0 ${height / 2} 
+            L ${2 * graphPadding} ${height / 2}
+            M ${width} ${height / 2} 
+            L ${width - 2 * graphPadding} ${height / 2}`
+        })
+        g.appendChild(line)
+        targetGraph.setAttribute('transform',`translate(${2 * graphPadding},${(height - box.height) / 2})`)
+        g.appendChild(targetGraph)
+
+        return g
+      }
+
+      // var node = parseAll('(foo+|()|aaaa)*b(a[a-z0-9_-]){2,}?(baz|baa)+|baaaa')
+      // drawAllgraph(node)
+      function drawAllGraph(){
+        var branchesGraph = drawBranchesGraph(node.branches)
+        var box = branchesGraph.getBBox()
+        var g = svgElt('g')
+        var width = box.width + 4 * graphPadding
+        var height = box.height + 2 * graphPadding
+        var rect = svgElt('rect',{
+          width,height,
+          fill:'none',
+        })
+        g.appendChild(rect)
+
+        var line = svgElt('path',{
+          fill:'none',
+          stroke:'black',
+          d:`
+            M ${graphPadding} ${height/2}
+            L ${2 * graphPadding} ${height / 2}
+            M ${width - graphPadding} ${height / 2}
+            L ${width - 2 * graphPadding} ${height / 2}`
+        })
+        g.appendChild(line)
+
+        var leftCircle = svgElt('circle',{
+          cx:graphPadding,
+          cy:height / 2,
+          r:5,
+          fill:'#6b6659',
+          stroke:'black'
+        })
+        g.appendChild(leftCircle)
+
+        var rightCircle= svgElt('circle',{
+          cx:width - graphPadding,
+          cy:height / 2,
+          r:5,
+          fill:'#6b6659',
+          stroke:'black'
+        })
+        g.appendChild(rightCircle)
+
+        branchesGraph.setAttribute('transform',`translate(${2 * graphPadding}, ${graphPadding})`)
+        g.appendChild(branchesGraph)
+        return g
+      }
+
+      function drawNodeGraph(node){
+        if(Array.isArray(node)){
+          return drawBranchesGraph(node)
+        }
+        if(node.type == 'Character'){
+          return drawCharacterGraph(node)
+        }
+        if(node.type == 'CharacterClass'){
+          return drawCharacterClassGraph(node)
+        }
+        if(node.type == 'Branch'){
+          return drawBranchGraph(node)
+        }
+        if(node.type == 'CaptureGroup'){
+          return drawCaptureGroupGraph(node)
+        }
+        if (node.type == 'Quantifier') {
+            return drawQuantifierGraph(node)
+        }
+      }
+    }
+  </script>
+</body>
+</html>

@@ -26,7 +26,7 @@ var chengjing0316 = {
   },
   matchesProperty:function(path, srcValue){
     return function(object){
-      return this.isMatch(object[path],srcValue)
+      return this.isEqual(object[path],srcValue)
     }.apply(this)
   },
   iteratee:function(predicate){
@@ -118,6 +118,48 @@ var chengjing0316 = {
   },
   flip:function(){
 
+  },
+  spread:function(){
+
+  },
+  delay:function(){
+
+  },
+  curry:function(){
+
+  },
+  assign:function(){
+    
+  },
+  merge:function(){
+
+  },
+  mapKeys:function(){
+
+  },
+  mapValues:function(object, iteratee = identity){
+    var result = {}
+    for(var key in object){
+      var val = object[key]
+    }
+  },
+  memoizesimple:function(func){
+    var cache = new Map()
+    return function(arg){
+      if(cache.has(arg)){
+        return cache.get(arg)
+      }else{
+        var result = func(arg)
+        cache.set(arg, result)
+        return result
+      }
+    }
+  },
+  memoize:function(func, resolver = this.identity){
+    var cache = new Map()
+    return function(...args){
+      var cacheKey = re
+    }
   },
   sum:function(array){
     return array.reduce((sum, val) => sum + val)
@@ -461,20 +503,25 @@ var chengjing0316 = {
   },
   map: function(collection, iteratee){
     let arr = []
-    if(typeof(iteratee) == 'function'){
-      let func1 = iteratee
-      iteratee = e => func1(e)
+    let func = iteratee
+    if(typeof iteratee == 'string'){
+      func = function(it){return it[iteratee]}
+    }else if(typeof(iteratee) == 'function'){
+      func = function(it){return it[iteratee]}
+    }else if(Array.isArray(iteratee)){
+      func = function(it){it[iteratee[0]] === iteratee[1]}
+    }else if(typeof iteratee == 'object'){
+      func = function(it){
+        for(var key in iteratee){
+          if(it[key] !== iteratee[key]){
+            return false
+          }
+        }
+        return true
+      }
     }
-    if(typeof(iteratee) == 'object'){
-      let func2 = iteratee
-      iteratee = e => e[func2]
-    }
-    if(typeof(iteratee) == 'string'){
-      let func3 = iteratee
-      iteratee = e => e[func3]
-    }
-    for(let item in collection){
-      arr.push(iteratee(collection[item]))
+    for(var i = 0; i < collection.length; i++){
+      arr.push(func(collection[i],i,collection))
     }
     return arr
   },
@@ -518,7 +565,9 @@ var chengjing0316 = {
       return count
     }
   },
-  sortBy: function(collection, iteratee){
+  sortBy: function(collection, iteratee = this.identity){
     
   }
 }
+
+
