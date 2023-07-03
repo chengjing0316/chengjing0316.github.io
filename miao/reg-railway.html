@@ -18,37 +18,54 @@
       background-color: rgb(165, 193, 75);
       margin: 0;
       >h1{
-        margin:0;
+        padding:20px 30px;
+        margin: 0;
       }
     }
     main{
       margin: auto;
-      width: 100%;
+      width: 95%;
+      margin-top: 15px;
       #allInput{
-        width: 95%;
-        margin:20px 30px 5px;
+        width: 100%;
         display: block;
         background-color: rgb(203, 203, 186);
         outline: none;
         font-size: 15px;
         font-family: Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+        resize:vertical;
       }
       >section{
           font-size:15px;
+          margin: 10px 0 20px;
           >button{
-            margin-left: 30px;
-            width: 100;
+            width: 100px;
             height: 26px;
             background-color: #bada55;
+            border: none;
+            font-size: 15px;
           }
         }
     }
-    svg {
+    div {
       background-color: #fff;
-      /* border: 1px solid; */
-      display: block;
-      margin: auto;
-      width: 95%;
+      margin-right: 0;
+      width: 100%;
+      font-size: 12px;
+      text-align: center;
+      overflow: auto;
+    }
+    ul{
+      margin: 0;
+      display: inline-block;
+      float: right;
+      >li{
+        list-style: none;
+        display: inline-block;
+        >a{
+          color: black;
+        }
+      }
     }
   </style>
 </head>
@@ -57,16 +74,28 @@
     <h1>REGEXPER</h1>
   </header>
   <main>
-    <textarea id="allInput">(foo+|aaaa)*b(a[abz049_-]){2,}?(baz|baa)+|baaaa</textarea>
+    <textarea id="allInput">(foo+|()|aaaa)*b(a[a-z0-9_-]|a|g){2,}?(baz|baa)+|baaaa</textarea>
     <section>
       <button onclick="draw()">Display</button>
+      <ul>
+        <li><a href="" class="downloadSVG" onclick="downloadSVG()">DownloadSVG</a></li>
+        //
+        <li><a href="" class="downloadPNG" onclick="downloadPNG()">DownloadPNG</a></li>
+        //
+        <li><a href="" class="copyLink" onclick="copyLink()">Permalink</a></li>
+      </ul>
     </section>
-    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div>
+      <svg version="1.0" xmlns="http://www.w3.org/2000/svg"></svg>
+    </div>
   </main>
   <footer></footer>
   <script>
     var svg = document.querySelector('svg')
     var textarea = document.querySelector('textarea')
+    window.onbeforeunload = e =>{
+      return '真的要关闭吗'
+    }
     function draw(){
       svg.innerHTML = ''  //第二次绘制之前应该清空
       var node = parseAll(textarea.value)
@@ -75,11 +104,57 @@
       svg.setAttribute('width',box.width)
       svg.setAttribute('height',box.height)
     }
+    function downloadSVG(){
+      var text = '<?xml version="1.0"?>' + svg.outerHTML
+      var file = new Blob([text], {type:'image/svg+xml'})
+      var url = URL.createObjectURL(file)
+      let a = document.querySelector(".downloadSVG")
+      a.href = url
+      a.download = 'regular-expression-graph.svg'
+      a.click()
+    }
+    function downloadPNG(){
+      var text = '<?xml version="1.0"?>' + svg.outerHTML
+      var file = new Blob([text], {type: 'image/svg+xml'})
+      var url = URL.createObjectURL(file)
+      var img = document.createElement('img')
+      img.src = url
+      img.onload = () => {
+        var canvas = document.createElement('canvas')
+        canvas.width = svg.getAttribute('width')
+        canvas.height = svg.getAttribute('height')
+        var ctx = canvas.getContext('2d')
 
+        ctx.fillStyle = 'white'
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        ctx.drawImage(img, 0, 0)
+        var url = canvas.toDataURL('image/png')
+
+        var a = document.querySelector('.downloadPNG')
+        a.href = url
+        a.download = 'regular-expression-graph.png'
+        a.click()
+      }
+    }
+    function copyLink() {
+      var link = localStorage.href
+      navigator.clipboard.writeText(link)
+      alert('复制成功')
+    }
     function parseAll(input){
       //node-Type:'Quantifier/CaptureGroup/Character/CharacterClass/Branch/...'
       //'fo+o{2,4}   (bar|baz|baa)  [baz]+'
       // '(foo){2,55}?foo(b(ar)|baz|baa)[baz]' // '(foo+|()|aaaa)*b(a[a-z0-9_-]){2,}?(baz|baa)+|baaaa'
+      try {
+        new RegExp(input)
+        var syntaxTree = parseRegularExpression(input)
+        draw(syntaxTree )
+      } catch(e) {
+        if (e instanceof SyntaxError) {
+          show(e.message)
+        }
+      }
+
       var str = input
       var i = 0
       var groupIndex = 1 //全局分组编号？？
@@ -91,7 +166,7 @@
         raw:input,
         branches:branches,
       }
-      function parseOnePart(){
+    function parseOnePart(){
       if(str[i] == '('){
         return parseCaptureGroup()
       }else if(str[i] == '['){
@@ -104,7 +179,7 @@
       return parseCharacter()
     }
 
-      function parseCaptureGroup(){
+    function parseCaptureGroup(){
       let node = {
         type: 'CaptureGroup',
         start: i,
@@ -153,7 +228,7 @@
         }
       }
       if (!node.nonCapture) {
-          node.groupIndex++
+          node.groupIndex = groupIndex++
       }
       var branches = parseBranches()
       node.branches = branches
@@ -162,14 +237,14 @@
       node.raw = str.slice(node.start, node.end)
       return node
     }
-      function parseGroupName(){
+    function parseGroupName(){
       var start = i
       while(str[i] !== '>'){
         i++
       }
       return str.slice(start, i)
     }
-      function parseBranches(){
+    function parseBranches(){
       var branches = []
       if(str[i] == ')'){
         return branches
@@ -187,7 +262,7 @@
       }
       return branches
     }
-      function parseBranch(){
+    function parseBranch(){
       var node = {
         type: 'Branch',
         start: i,
@@ -223,20 +298,20 @@
       node.raw = str.slice(node.start, node.end)
       return node
     }
-      function parseCharacter(){
+    function parseCharacter(){
       var node = {
         type: 'Character',
         start:i,
         end:0,
         raw:'',
-        char:str[i]
+        char:`"${str[i]}"`,
       }
       i++
       node.end =  i
       node.raw = str.slice(node.start, node.end)
       return node
     }
-      function parseCharacterClass(){
+    function parseCharacterClass(){
       var node = {
         type: 'CharacterClass',
         start: i,
@@ -262,10 +337,11 @@
           if(str[i] == ']'){  //  ‘-’后直接跟着‘]’,无意义，只是个普通符号
             i--   //(foo){2,55}?foo(b(ar)|baz|baa)[baz]' // '(foo+|()|aaaa)*b(a[a-z0-9_-]){2,}?(baz|baa)+|baaaa
             var char = parseCharacter()   
-            node.characters.push(char)    // 把-存进去
+            node.characters.push(char)
             continue
           }
           var char = parseCharacter()
+          
           var prevChar = node.characters.pop()
           if(char.char < prevChar.char){
             throw new SyntaxError('RangeError')
@@ -286,7 +362,7 @@
       return node
     }
 
-      function parseQuantifier(){
+    function parseQuantifier(){
       var node = {
         type: "Quantifier",
         start: i,
@@ -376,7 +452,9 @@
           width:width,
           height:height,
         })
+
         var g = svgElt('g')
+
         g.appendChild(rect)
         g.appendChild(text)
         return g
@@ -566,9 +644,10 @@
             d:`
               M ${width - 2 * graphPadding} ${height / 2}
               A ${graphPadding} ${graphPadding} 0 0 1 ${width - graphPadding} ${height / 2 + graphPadding}
-              L ${width - graphPadding - graphPadding / 3} ${height / 2 + graphPadding - graphPadding / 3}
-              M ${width - graphPadding} ${height / 2 + graphPadding}
-              L ${width - graphPadding + graphPadding / 3} ${height / 2 + graphPadding - graphPadding / 3}
+              l 0 ${graphPadding / 2}
+              L ${width - graphPadding - graphPadding / 3} ${height / 2 + graphPadding}
+              M ${width - graphPadding} ${height / 2 + 1.5 * graphPadding}
+              L ${width - graphPadding + graphPadding / 3} ${height / 2 + graphPadding}
               M ${width - graphPadding} ${height / 2 + graphPadding}
               L ${width - graphPadding} ${height - graphPadding}
               A ${graphPadding} ${graphPadding} 0 0 1 ${width - graphPadding * 2} ${height}
