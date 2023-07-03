@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Regexper作业</title>
+  <link rel="shortcut icon" href="favicon.ico"/>
   <style>
     body {
       background-color: #6b6659;
@@ -565,6 +566,10 @@
             d:`
               M ${width - 2 * graphPadding} ${height / 2}
               A ${graphPadding} ${graphPadding} 0 0 1 ${width - graphPadding} ${height / 2 + graphPadding}
+              L ${width - graphPadding - graphPadding / 3} ${height / 2 + graphPadding - graphPadding / 3}
+              M ${width - graphPadding} ${height / 2 + graphPadding}
+              L ${width - graphPadding + graphPadding / 3} ${height / 2 + graphPadding - graphPadding / 3}
+              M ${width - graphPadding} ${height / 2 + graphPadding}
               L ${width - graphPadding} ${height - graphPadding}
               A ${graphPadding} ${graphPadding} 0 0 1 ${width - graphPadding * 2} ${height}
               L ${2 * graphPadding} ${height}
