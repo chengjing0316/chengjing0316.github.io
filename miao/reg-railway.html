@@ -145,15 +145,17 @@
       //node-Type:'Quantifier/CaptureGroup/Character/CharacterClass/Branch/...'
       //'fo+o{2,4}   (bar|baz|baa)  [baz]+'
       // '(foo){2,55}?foo(b(ar)|baz|baa)[baz]' // '(foo+|()|aaaa)*b(a[a-z0-9_-]){2,}?(baz|baa)+|baaaa'
-      try {
-        new RegExp(input)
-        var syntaxTree = parseRegularExpression(input)
-        draw(syntaxTree )
-      } catch(e) {
-        if (e instanceof SyntaxError) {
-          show(e.message)
-        }
-      }
+
+
+      // try {
+      //   new RegExp(input)
+      //   var syntaxTree = parseRegularExpression(input)
+      //   draw(syntaxTree )
+      // } catch(e) {
+      //   if (e instanceof SyntaxError) {
+      //     show(e.message)
+      //   }
+      // }
 
       var str = input
       var i = 0
@@ -169,7 +171,7 @@
     function parseOnePart(){
       if(str[i] == '('){
         return parseCaptureGroup()
-      }else if(str[i] == '['){
+      }else if(str[i] == '['){    // [ 时
         return parseCharacterClass()
       }else if(str[i] == '{' || str[i] == '*' || str[i] == '+' || str[i] == '?'){
         return parseQuantifier()
@@ -298,7 +300,8 @@
       node.raw = str.slice(node.start, node.end)
       return node
     }
-    function parseCharacter(){
+
+    function parseCharacter(){//解析单个字符
       var node = {
         type: 'Character',
         start:i,
@@ -311,7 +314,8 @@
       node.raw = str.slice(node.start, node.end)
       return node
     }
-    function parseCharacterClass(){
+
+    function parseCharacterClass(){//解析[a-z 0-9]整个中括号字符组
       var node = {
         type: 'CharacterClass',
         start: i,
@@ -330,19 +334,19 @@
           i++
           break
         }
-        var char = parseCharacter()
-        node.characters.push(char)
+        var char = parseCharacter()//解析出第一个字符
+        node.characters.push(char)//将第一个字符push进去characters
         if(str[i] == '-'){
-          i++ 
+          i++     //如果遇到“-”，就往后判断下一个字符
           if(str[i] == ']'){  //  ‘-’后直接跟着‘]’,无意义，只是个普通符号
             i--   //(foo){2,55}?foo(b(ar)|baz|baa)[baz]' // '(foo+|()|aaaa)*b(a[a-z0-9_-]){2,}?(baz|baa)+|baaaa
             var char = parseCharacter()   
             node.characters.push(char)
             continue
           }
-          var char = parseCharacter()
+          var char = parseCharacter() //解析出“-”后面的一个字符
           
-          var prevChar = node.characters.pop()
+          var prevChar = node.characters.pop()//将第一个范围字符pop出characters
           if(char.char < prevChar.char){
             throw new SyntaxError('RangeError')
           }
@@ -353,8 +357,9 @@
             raw: str.slice(prevChar.start, char.end),
             startChar:prevChar,
             endChar:char,
+            char:`"${str[prevChar.start]}" - "${str[char.end - 1]}"`,
           }
-          node.characters.push(node)
+          node.characters.push(rangeNode)
         }
       }
       node.end = i
@@ -503,12 +508,25 @@
         var g = svgElt('g')
         g.appendChild(rect)
 
-        var line = svgElt('line', {//画线
-            x1: 0,
-            y1: height / 2,
-            x2: width,
-            y2: height / 2,
-            stroke: 'black',
+        var startingLine = 0
+        graphs.forEach((_, i) => {//修改画线
+          var line = svgElt('line', {
+          x1: startingLine,
+          y1: height / 2,
+          x2: startingLine + graphPadding,
+          y2: height / 2,
+          stroke: 'black',
+          })
+          g.appendChild(line)
+          startingLine += boxes[i].width + graphPadding
+        })
+
+        var line = svgElt('line', {
+          x1: startingLine,
+          y1: height / 2,
+          x2: startingLine + graphPadding,
+          y2: height / 2,
+          stroke: 'black',
           })
           g.appendChild(line)
 
@@ -740,7 +758,7 @@
           return drawCaptureGroupGraph(node)
         }
         if (node.type == 'Quantifier') {
-            return drawQuantifierGraph(node)
+          return drawQuantifierGraph(node)
         }
       }
     }
