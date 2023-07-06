@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Snake</title>
+  <style>
+    #stage {
+      letter-spacing: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <pre id="stage"></pre>
+  <script>
+    class Snake{
+      constructor(width = 50, height = 50){
+        this.width = width
+        this.height = height
+        this.world = new Array(height).fill(0).map(it => new Array(width).fill('.'))
+        this.score = 0    //统计得分
+        this.head = [width / 3 | 0, height / 3 | 0] //初始化蛇头位置,用按位或取整
+        this.tail = this.head   //蛇尾位置，初始同蛇头位置
+        var [x,y] = this.head     
+        this.world[y][x] = '>'    //y = height / 3,所以对应数组里相反
+        this.placeApple()     //放置苹果
+      }
+
+      //放苹果
+      placeApple(){
+        while(true){//随机放置苹果
+          var x = this.width * Math.random() | 0  //用按位或取整
+          var y = this.height * Math.random() | 0
+          if(this.world[y][x] == '.'){
+            this.world[y][x] = 'O'
+            return
+          }
+        }
+      }
+
+      //判断游戏结束边界
+      judgeGameOver([x,y]){
+        if(x < 0 || x >= this.width){//x超出边界
+          return true
+        }
+        if(y < 0 || y >= this.height){//y超出边界
+          return true
+        }
+        if(this.world[y][x] !== '.' && this.world[y][x] !== 'O'){//蛇头碰到自身
+          return true
+        }
+        return false
+      }
+
+      //计算判断蛇头尾的下一位置
+      next(){
+        var [hx,hy] = this.head
+        var headDirection = this.world[hy][hx]
+        //计算蛇头的下一位置
+        if(headDirection == '^'){
+          var [x,y] = [hx, hy - 1]
+        }
+        if(headDirection == 'v'){
+          var [x,y] = [hx, hy + 1]
+        }
+        if(headDirection == '<'){ 
+          var [x,y] = [hx - 1, hy]
+        }
+        if(headDirection == '>'){
+          var [x,y] = [hx + 1, hy]
+        }
+        if(this.judgeGameOver([x,y])){//如果前方为结束边界，则游戏结束
+          return 'GameOver'
+        }
+        //如果前方是苹果，则将苹果的位置置为蛇头
+        if(this.world[y][x] == 'O'){
+          this.score++
+          this.world[y][x] = headDirection
+          this.head = [x,y]
+          this.placeApple()
+          return
+        }
+
+        this.world[y][x] = headDirection
+        this.head = [x,y]
+
+        //尾部位置判断
+        var [tx,ty] = this.tail
+        var tailDirection = this.world[ty][tx]
+        if (tailDirection == '^') {
+          var [x, y] = [tx, ty - 1]
+        }
+        if (tailDirection == 'v') {
+          var [x, y] = [tx, ty + 1]
+        }
+        if (tailDirection == '<') {
+          var [x, y] = [tx - 1, ty]
+        }
+        if (tailDirection == '>') {
+          var [x, y] = [tx + 1, ty]
+        }
+        this.tail = [x,y]
+        this.world[ty][tx] = '.'
+      }
+    
+      //设置蛇头方向
+      setDirection(direction){
+        var [x,y] = this.head
+        var currentDirection = this.world[y][x]
+        if(currentDirection == '<' || currentDirection == '>'){//往左右时，下一步不能往回走
+          if(direction == '^' || direction == "v"){
+            this.world[y][x] = direction
+            this.next()
+          }
+        }else{
+          if(direction == "<" || direction == ">"){
+            this.world[y][x] = direction
+            this.next()
+          }
+        }
+        if(direction == currentDirection){//如果相等，直接下一步
+          this.next()
+        }
+      }
+
+      renderToHTML(){
+        return '<table>' + this.world.map(row => {
+          return `<tr>
+            ${row.map(cell => {
+              return `<td>${cell}</td>`
+            }).join('')}
+          </tr>`
+        }).join('') + '</table>'
+      }
+    }
+
+    var game = new Snake()
+    var intervalId
+
+    //打开页面时自动执行
+    show()
+    auto()
+
+    // 绘制页面
+    function show(){
+      stage.innerHTML = game.renderToHTML()
+    }
+
+    //判断继续执行或结束游戏
+    function next(){
+      var result = game.next()
+      show()
+      if(result == 'GameOver'){
+        alert('GameOver!\nScore: ' + game.score)
+        stop()
+      }
+    }
+
+    //蛇自动往前走
+    function auto(){
+      intervalId = setInterval(() => {
+        next()
+      }, 1000);
+    }
+
+    //清除setInterval
+    function stop(){
+      clearInterval(intervalId)
+    }
+
+    //添加方向键控制事件
+    document.body.addEventListener('keydown',e => {
+      if(e.key == 'ArrowUp'){
+        game.setDirection('^')
+        stop()
+        show()
+        auto()
+      }else if(e.key == 'ArrowDown'){
+        game.setDirection('v')
+        stop()
+        show()
+        auto()
+      }else if(e.key == 'ArrowLeft'){
+        game.setDirection('<')
+        stop()
+        show()
+        auto()
+      }else if(e.key == 'ArrowRight'){
+        game.setDirection('>')
+        stop()
+        show()
+        auto()
+      }
+    })
+
+  </script>
+</body>
+</html>
