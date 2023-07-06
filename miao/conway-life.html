@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ConwayGameOfLife</title>
+  <style>
+    table.game-world {
+      table-layout: fixed;
+      border-collapse: collapse;
+      & td {
+        border: 1px solid grey;
+        width: 10px;
+        height: 10px;
+        min-width: 10px;
+      }
+    }
+
+
+    td.alive {
+      background-color: black;
+    }
+    td.hover-alive {
+      background-color: #ccc;
+    }
+    td.alive.hover-alive {
+      background-color: #333;
+    }
+  </style>
+</head>
+<body>
+  <button onclick="next()">下一轮</button>
+  <button onclick="toggleAuto(this)">自动演化</button>
+  <input type="number" value="200" id="duration" step="50">
+  <button onclick="randomFill()">随机填充</button>
+  <input type="number" value="20" id="stageWidth" style="width: 3em" step="10">
+  <input type="number" value="20" id="stageHeight" style="width: 3em" step="10">
+  <button onclick="changeStageSize()">确定</button>
+  <button onclick="drawMode = 'dot'">点</button>
+  <button onclick="drawMode = 'hxj'">滑翔机</button>
+  <button onclick="drawMode = 'tank'">坦克</button>
+  <button onclick="drawMode = 'bread'">面包</button>
+  <input type="checkbox" id="isCircular" checked onchange="game.setCircular(this.checked)">循环世界
+  <div class="stage"></div>
+  <script>
+    class Conway{
+      constructor(width = 20,height = 20){
+        this.worldWidth = width
+        this.worldHeight = height 
+        this.world = this._createWorld()//存储了生存状态的二维数组
+        this.circular = false   //世界是否循环
+      }
+
+      //创建一个二维数组存储生存状态
+      _createWorld(){  
+        return new Array(this.worldHeight).fill(0).map(it => new Array(this.worldWidth).fill(0))
+      }
+
+      //随机初始化状态
+      random(r = 0.1){
+        for(let  row = 0; row < this.world.length; row++){
+          for(let  col = 0; col < this.world[row].length; col++){
+            if(Math.random() < r){
+              this.world[row][col] = 1
+            }
+          }
+        }
+        return this
+      }
+
+      //下一代
+      next(){
+        var newWorld = this._createWorld()
+        for(let row = 0; row < this.world.length; row++){
+          for(let col = 0; col < this.world[row].length; col++){
+            let current = this.world[row][col] //当前格子存活状态
+            let neighbours = -current   //先提前剪掉当前格子数
+            for(let r = row - 1; r <= row + 1; r++){
+              for(let c = col - 1; c <= col + 1; c++){
+                neighbours += this.get(r,c)
+              }
+            }
+            if(current == 1){
+              if(neighbours >= 2 && neighbours <= 3){
+                newWorld[row][col] = 1
+              }
+            }else{
+              if(neighbours == 3){
+                newWorld[row][col] = 1
+              }
+            }
+          }
+        }
+        //如果新绘制的页面和旧的相同，则停止
+        let isStop = JSON.stringify(this.world) === JSON.stringify(newWorld)
+        this.world = newWorld
+        return isStop
+      }
+      setCircular(c = true){
+        this.circular = c
+      }
+      get(row, col){
+        if(this.circular){
+          if(row >= this.worldHeight){
+            row = row % this.worldHeight
+          }
+          if(row < 0){
+            row = row + this.worldHeight
+          }
+          if(col >= this.worldWidth){
+            col = col % this.worldWidth
+          }
+          if(col < 0){
+            col = col + this.worldWidth
+          }
+          return this.world[row][col]
+        }else{
+          return this.world[row]?.[col] ?? 0
+        }
+      }
+      set(row, col, alive = 1){
+        if(row < this.worldHeight  && col < this.worldWidth){
+          this.world[row][col] = alive
+        }
+        return this
+      }
+      
+      //绘制当前状态的表格
+      renderToHTML(){
+        return `
+          <table class="game-world">
+            ${this.world.map((row,rowIdx) => {
+              return `<tr>
+                ${row.map((cell,colIdx) => {
+                  if(cell == 1){//如果活着
+                    return `<td data-row="${rowIdx}" data-col="${colIdx}" class="alive"></td>`
+                  }else{
+                    return `<td data-row="${rowIdx}" data-col="${colIdx}"></td>`
+                  }
+                }).join('')}
+              </tr>`
+            }).join('')}
+          </table>
+          `//join后元素直接存在逗号不影响HTML
+      }
+    }
+
+    var stage = document.querySelector('.stage')
+    var game = new Conway(100,80)
+    var drawMode = 'dot' 
+    //鼠标点击生成样式
+    var modes = {
+      dot:[[1]],
+      hxj:[
+        [0,0,1],
+        [1,0,1],
+        [0,1,1],
+        ],
+      tank:[
+        [0,1,1,1,1],
+        [1,0,0,0,1],
+        [0,0,0,0,1],
+        [1,0,0,1,0],
+      ],
+      bread:[
+        [0,1,1,0],
+        [1,0,0,1],
+        [0,1,0,1],
+        [0,0,1,0],
+      ]
+    }
+  
+    stageWidth.value = game.worldWidth
+    stageHeight.value = game.worldHeight
+    isCircular.checked = game.circular
+
+    stage.innerHTML = game.renderToHTML()
+    
+
+    //绘制单个点支持颜色生存状态切换,支持绘制其他形状的初始点
+    stage.addEventListener('click', e => {
+      if(e.target.matches('td')){
+        var td = e.target
+        var row = Number(td.dataset.row)//从data-row属性中提取出目标td的row
+        var col = Number(td.dataset.col)//从data-col属性中提取出目标td的column
+      }
+      var mode = modes[drawMode]
+
+      if(drawMode == 'dot'){
+        td.classList.toggle('alive')//toggle:若存在，删除并返回false;若不存在，添加并返回true
+        game.set(row, col, Number(td.classList.contains('alive')))//若有alive，则set alive=1
+      }else{//如果drawMode是其他形态
+        for(var r = 0; r < mode.length; r++){//选中第r种模式
+          for(var c = 0; c < mode[r].length; c++){//按照选中模式的排列，将坐标定位到stage上
+            var rr = r + row
+            var cc = c + col
+            game.set(rr, cc, mode[r][c])//存在问题，由于是r*c的格子，所以白色部分会覆盖掉原本为黑色的部分
+          }
+        }
+        stage.innerHTML = game.renderToHTML()
+      }
+    })
+
+    //添加未打点时悬浮的阴影效果
+    stage.addEventListener('mouseover', e => {
+      if(e.target.matches('td')){
+        var td = e.target
+        var row = Number(td.dataset.row)
+        var col = Number(td.dataset.col)
+        var mode = modes[drawMode]
+        for(var r = 0; r < mode.length; r++){
+          for(var c = 0; c < mode[r].length; c++){
+            var rr = r + row
+            var cc = c + col
+            var targetTd = document.querySelector(`td[data-col="${cc}"][data-row="${rr}"]`)
+            if(targetTd && mode[r][c] == 1){
+              targetTd.classList.add('hover-alive')
+            }
+          }
+        }
+      }
+    })
+  
+    //鼠标移出时去掉阴影效果
+    stage.addEventListener('mouseout', e => {
+      if(e.target.matches('td')){
+        document.querySelectorAll('.hover-alive').forEach(it => {
+          it.classList.remove('hover-alive')
+        })
+      }
+    })
+  
+    //让界面进行到下一轮
+    function next(){
+      if(game.next() == true && running){
+        clearInterval(intervalId)
+        alert('演化停止')
+      }
+      stage.innerHTML = game.renderToHTML()
+    }
+
+
+    //初始化随机生成alive格子
+    function randomFill(){
+      game.random()
+      stage.innerHTML = game.renderToHTML()
+    }
+
+    var running = false
+    var intervalId
+    //自动演化按钮模块
+    function toggleAuto(el){
+      if(running == false){
+        el.textContent = '停止演化'
+        running = true
+        intervalId = setInterval(() => {
+          next()
+        }, duration.value);
+        next()
+      }else{
+        el.textContent = '自动演化'
+        running = false
+        clearInterval(intervalId)
+      }
+    }
+
+    //输入间隔时间后重绘页面
+    duration.addEventListener('input', () => {
+      console.log('input')
+      if(duration.value == '0'){
+        duration.value = '16'
+      }
+      if(running){
+        clearInterval(intervalId)
+        intervalId = setInterval(() => {
+          next()
+        }, duration.value);
+      }
+    })
+
+    function changeStageSize(){
+      game = new Conway(+stageWidth.value, +stageHeight.value)
+      next()
+    }
+  </script>
+</body>
+</html>
