@@ -15,8 +15,8 @@ var chengjing0316 = {
   },
   property:function(name){
     return function(obj){
-      return obj[name]
-    }
+      return this.get(obj,path)  //返回给定对象指定key的值
+    }.apply(this)
   },
   matches:function(source){
     var self = this
@@ -32,7 +32,7 @@ var chengjing0316 = {
   iteratee:function(predicate){
     var func = predicate
     if(typeof predicate === 'string'){
-      func = this.property(predicate)
+      func = this.property(predicate)     
     }else if(Array.isArray(predicate)){
       func = this.matchesProperty(predicate)
     }else if(typeof predicate === 'object'){
@@ -43,7 +43,20 @@ var chengjing0316 = {
   identity:function(arg){
     return arg
   },
+  toPath: function(value){
+    if(typeof value == 'string'){
+      var result = value.split(/(\.)|(\[)|(\]\.)|(\]\[)|\]/)
+      if(result.at(-1) == ''){
+        result.pop()
+      }
+      if(result.at(0) == ''){
+        result.shift()
+      }
+    }
+    return result
+  },
   get:function(obj, path, defaultValue){
+    path = this.toPath(path)
     for(var key of path){
       if(obj != undefined){
         obj = obj[key]
@@ -51,10 +64,10 @@ var chengjing0316 = {
         return defaultValue
       }
     }
-    return obj
+    return obj ?? defaultValue
   },
-  has:function(){
-
+  has:function(object, path){
+    
   },
   set:function(){
     
@@ -226,7 +239,24 @@ var chengjing0316 = {
       return ary.slice(1)
     }
   },
-  findIndex: function(ary, test, fromIndex = 0){
+  dropRight: function(array, n = 1){
+    let i = array.length - n
+    return i >=0 ? array.slice(0,i) : []
+  },
+  dropRightWhile: function(array, predicate = this.identity){
+    func = _.iteratee(predicate)
+    const reversedArray = array.slice().reverse();
+    let dropCount = 0;
+    for (let i = 0; i < reversedArray.length; i++) {
+      if (!func(reversedArray[i], i, reversedArray)) {
+      // 如果遇到不满足条件的元素，则返回剩余的部分
+        return array.slice(0, array.length - dropCount);
+      }
+      dropCount++;
+    }
+    return []; // 如果数组全部满足条件，则返回空数组
+  },
+  findIndex: function(ary, test){
     for(i = fromIndex; i < ary.length; i++){
       if(typeof(test) == 'function'){
         if(test(ary[i]) == true){
