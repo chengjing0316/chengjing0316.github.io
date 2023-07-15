@@ -29,23 +29,24 @@ var chengjing0316 = {
       return this.isEqual(object[path],srcValue)
     }.apply(this)
   },
-  iteratee:function(predicate){
-    var func = predicate
-    if(typeof predicate === 'string'){
-      func = this.property(predicate)     
-    }else if(Array.isArray(predicate)){
-      func = this.matchesProperty(predicate)
-    }else if(typeof predicate === 'object'){
-      func = this.matches(predicate)
+  iteratee:function(func){
+    if(typeof func === 'function'){
+      return func
     }
-    return func
+    if(typeof func === 'string'){
+      return this.property(func)
+    }
+    if(typeof func === 'object' && func !== null){
+      return this.matches(func)
+    }
+    return this.identity(func)
   },
   identity:function(arg){
     return arg
   },
   toPath: function(value){
     if(typeof value == 'string'){
-      var result = value.split(/(\.)|(\[)|(\]\.)|(\]\[)|\]/)
+      var result = value.split(/\.|\[|\]\.|\]\[|\]/)
       if(result.at(-1) == ''){
         result.pop()
       }
@@ -75,11 +76,22 @@ var chengjing0316 = {
   topath:function(){
 
   },
-  differenceBy:function(array, values, iteratee){
-
+  differenceBy:function(array, values, iteratee = this.identity){
+    let newValues = values.map(it => iteratee(it))
+    return array.filter(item => {
+      let newItem = iteratee(item)
+      return !newValues.includes(newItem)
+    })
   },
   differenceWith:function(array, values,comparator){
-
+    return array.filter(a => {
+      for (let b of values) {
+        if (comparator(a, b)) {
+          return false;
+        }
+      }
+      return true;
+    });
   },
   uniq:function(){
 
@@ -256,34 +268,22 @@ var chengjing0316 = {
     }
     return []; // 如果数组全部满足条件，则返回空数组
   },
-  findIndex: function(ary, test){
-    for(i = fromIndex; i < ary.length; i++){
-      if(typeof(test) == 'function'){
-        if(test(ary[i]) == true){
-          return i
-        }
-      }
-      if(typeof(test) == 'object'){
-        if(Array.isArray(test)){
-          if(test[0] in ary[i] && test[1] == ary[i][test[0]]){
-            return i
-          }
-        }else{
-            let c = true
-            for(let item in test){
-              if(ary[i][item] !== test[item]){
-                c = false
-              }
-            }
-            if(c){
-              return i
-            }
-        }
-      }
-      if(typeof(test) == 'string'){
-        if(test in ary[i] && ary[i][test]){
-          return i
-        }
+  dropWhile: function(array, predicate = this.identity){
+    let c = 0
+    func = this.iteratee(predicate)
+    while(c < array.length && func(array[c])){
+      c++
+    }
+    return array.slice(c)
+  },
+  findIndex: function(array, predicate = this.identity, fromIndex = 0){
+    const length = array == null ? 0 : array.length
+    if(!length){return -1}
+    fromIndex = fromIndex < 0 ? Math.max(length + fromIndex, 0) : fromIndex
+    func = this.iteratee(predicate)
+    for(let i = fromIndex; i < length; i++){
+      if(func(array[i], i, array)){
+        return i
       }
     }
     return -1
@@ -596,8 +596,53 @@ var chengjing0316 = {
     }
   },
   sortBy: function(collection, iteratee = this.identity){
-    
-  }
-}
+    let func = this.iteratee(iteratee)
 
+  },
+  intersection: function(...arrays){
+    if(!arrays.every(Array.isArray)){
+      return []
+    }
+    const result = [], firstArray = arrays[0]
+    for(let i = 0; i < firstArray.length; i++){
+      const value = firstArray[i]
+      if(result.includes(value)){
+        continue
+      }
+      if(arrays.every(array => array.includes(value))){
+        result.push(value)
+      }
+    }
+    return result
+  },
+  intersectionBy: function(...arrays){
+    let iteratee = this.iteratee(arrays.pop())
+    let result = arrays[0]
+    for(let i = 1; i < arrays.length; i++){
+      let set = new Set(arrays[i].map(it => iteratee(it)))
+      result = result.filter(it => set.has(iteratee(it)))
+    }
+    return result
+  },
+  intersectionWith: function(...arrays){
+    let comparator = arrays.pop()
+    let result = []
+    outer:for(let item1 of arrays[0]){
+      for(let i = 1; i < arrays.length; i++){
+        let array = arrays[i]
+        for(let item2 of array){
+          if(comparator(item1,item2)){
+            result.push(item1)
+            continue outer
+          }
+        }
+      }
+    }
+    return result
+  },
+  nth: function(array, n = 0){
+    let idx = n < 0 ? Math.max(array.length + n, 0) : n
+    return array[idx]
+  },
+}
 
