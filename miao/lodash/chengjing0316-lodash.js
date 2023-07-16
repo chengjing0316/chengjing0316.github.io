@@ -684,7 +684,7 @@ var chengjing0316 = {
     return result
   },
   intersectionBy: function(...arrays){
-    let func = this.iteratee(arrays.pop())
+    let func = chengjing0316.iteratee(arrays.pop())
     let result = arrays[0]
     for(let i = 1; i < arrays.length; i++){
       let set = new Set(arrays[i].map(it => func(it)))
