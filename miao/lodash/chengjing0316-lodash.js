@@ -37,9 +37,9 @@ var chengjing0316 = {
     }
     if(typeof predicate == "object"){
       if(Array.isArray(predicate)){
-        predicate =  function(it){
-          return it[predicate[0]] = predicate[1]
-        }
+        let map = new Map()
+        map.set(predicate[0],predicate[1])
+        predicate = map
       }
       return chengjing0316.matches(predicate)
     }
