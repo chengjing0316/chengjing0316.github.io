@@ -13,7 +13,7 @@ var chengjing0316 = {
     }
     return true
   },
-  property:function(name){
+  property:function(path){
     return function(obj){
       return this.get(obj,path)  //返回给定对象指定key的值
     }.apply(this)
@@ -77,11 +77,16 @@ var chengjing0316 = {
 
   },
   differenceBy:function(array, values, iteratee = this.identity){
-    let newValues = values.map(it => iteratee(it))
-    return array.filter(item => {
-      let newItem = iteratee(item)
-      return !newValues.includes(newItem)
-    })
+    if(!Array.isArray(iteratee)){
+      let iteratee = this.iteratee(this.iteratee)
+      let newValues = values.map(it => iteratee(it))
+      return array.filter(item => {
+        let newItem = iteratee(item)
+        return !newValues.includes(newItem)
+      })
+    }else{
+      return this.difference(array,values)
+    }
   },
   differenceWith:function(array, values,comparator){
     return array.filter(a => {
