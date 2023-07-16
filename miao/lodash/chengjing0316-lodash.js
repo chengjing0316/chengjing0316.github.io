@@ -557,18 +557,18 @@ var chengjing0316 = {
     return collection
   },
   map: function(collection, iteratee){
-    iteratee = this.iteratee(iteratee)
+    func = this.iteratee(iteratee)
     var result = []
     if(Array.isArray(collection)){
       for(let i = 0; i < collection.length; i++){
-        result.push(iteratee(collection[i], i, collection))
+        result.push(func(collection[i], i, collection))
       }
     }else{
       for(var item in collection){
-        result.push(iteratee(collection[item], item, collection))
+        result.push(func(collection[item], item, collection))
       }
     }
-    result
+    return result
   },
   filter: function(array, predicate = this.identity){
     var func = this.iteratee(predicate)
