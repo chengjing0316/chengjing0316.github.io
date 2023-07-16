@@ -411,6 +411,24 @@ var chengjing0316 = {
     }
     return ary
   },
+  pullAll: function(array, values){
+    return array.filter(it => !values.includes(it))
+  },
+  pullAllBy:function(array, values, iteratee){
+    iteratee = this.iteratee(iteratee)
+    let set = new Set(values.map(it => iteratee(it)))
+    return array.filter(it => !set.has(iteratee(it)))
+  },
+  pullAllWith: function(array, values, comparator){
+    values.forEach(item1 => {
+      array.forEach((item2,i) => {
+        if(comparator(item1,item2)){
+          array.splice(i, 1)
+        }
+      })
+    })
+    return array
+  },
   reverse: function(ary){
     let result = []
     for(i = ary.length - 1; i >= 0; i--){
@@ -654,5 +672,6 @@ var chengjing0316 = {
     let idx = n < 0 ? array.length + n : n
     return array[idx]
   },
+
 }
 
