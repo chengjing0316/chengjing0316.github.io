@@ -37,7 +37,7 @@ var chengjing0316 = {
     }
     if(typeof func === 'object' && func !== null){
       return function(obj){
-        return chengjing0316.isMatch(obj,value)
+        return chengjing0316.isMatch(obj,func)
       }
     }
     return this.identity(func)
