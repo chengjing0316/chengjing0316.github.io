@@ -15,8 +15,8 @@ var chengjing0316 = {
   },
   property:function(path){
     return function(obj){
-      return this.get(obj,path)  //返回给定对象指定key的值
-    }.apply(this)
+      return chengjing0316.get(obj,path)  //返回给定对象指定key的值
+    }
   },
   matches:function(source){
     var self = this
@@ -78,7 +78,7 @@ var chengjing0316 = {
   },
   differenceBy:function(array, values, iteratee = this.identity){
     if(!Array.isArray(iteratee)){
-      let iteratee = this.iteratee(this.iteratee)
+      let iteratee = this.iteratee(iteratee)
       let newValues = values.map(it => iteratee(it))
       return array.filter(item => {
         let newItem = iteratee(item)
@@ -646,7 +646,7 @@ var chengjing0316 = {
     return result
   },
   nth: function(array, n = 0){
-    let idx = n < 0 ? Math.max(array.length + n, 0) : n
+    let idx = n < 0 ? array.length + n : n
     return array[idx]
   },
 }
