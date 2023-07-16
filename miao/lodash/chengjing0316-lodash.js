@@ -34,7 +34,7 @@ var chengjing0316 = {
       func = chengjing0316.property(predicate)
     }else if(Array.isArray(predicate)){
       func = function(it){
-        return it[predicate[0]] == predicate[1]
+        return it[predicate[0]] = predicate[1]
       }
     }else if(typeof predicate == "object"){
       func = chengjing0316.matches(predicate)
