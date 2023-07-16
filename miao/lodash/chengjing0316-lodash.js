@@ -29,19 +29,21 @@ var chengjing0316 = {
     }
   },
   iteratee:function(predicate){
-    var func = predicate
-    if(typeof func == 'string'){
-      func = chengjing0316.property(predicate)
+    if(typeof predicate == 'function'){
+      return predicate
+    }
+    if(typeof predicate == 'string'){
+      return chengjing0316.property(predicate)
     }
     if(Array.isArray(predicate)){
-      func = function(it){
+      return function(it){
         return it[predicate[0]] = predicate[1]
       }
     }
     if(typeof predicate == "object"){
-      func = chengjing0316.matches(predicate)
+      return chengjing0316.matches(predicate)
     }
-    return func
+    return predicate
   },
   identity:function(arg){
     return arg
