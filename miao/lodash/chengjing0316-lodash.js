@@ -34,7 +34,7 @@ var chengjing0316 = {
       return func
     }
     if(typeof func == 'string'){
-      return chengjing0316.property(predicate)
+      return chengjing0316.property(func)
     }
     if(typeof func == "object"){
       if(Array.isArray(func)){
