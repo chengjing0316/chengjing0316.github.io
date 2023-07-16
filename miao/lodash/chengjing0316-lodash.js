@@ -1,5 +1,5 @@
 var chengjing0316 = {
-  isMatch:function(object, source){
+  isMatch:function(object, source){//执行一个深度比较，来确定 object 是否含有和 source 完全相等的属性值。
     for(var key in source){
       if(typeof source[key] == 'object'){
         if(!this.isMatch(object[key], source[key])){
@@ -25,7 +25,7 @@ var chengjing0316 = {
   },
   matchesProperty:function(path, srcValue){
     return function(object){
-      return chengjing0316.isEqual(object[path],srcValue)
+      return chengjing0316.isEqual(chengjing0316.get(object,path),srcValue)
     }
   },
   iteratee:function(func){
@@ -35,13 +35,10 @@ var chengjing0316 = {
     if(typeof func === 'string'){
       return this.property(func)
     }
-    if(Array.isArray(func)){
-      return function (obj) {
-        return obj[0] === obj[1];
-      }
-    }
     if(typeof func === 'object' && func !== null){
-      return this.matches(func)
+      return function(obj){
+        return chengjing0316.isMatch(obj,value)
+      }
     }
     return this.identity(func)
   },
@@ -560,28 +557,18 @@ var chengjing0316 = {
     return collection
   },
   map: function(collection, iteratee){
-    let arr = []
-    let func = iteratee
-    if(typeof iteratee == 'string'){
-      func = function(it){return it[iteratee]}
-    }else if(typeof(iteratee) == 'function'){
-      func = function(it){return it[iteratee]}
-    }else if(Array.isArray(iteratee)){
-      func = function(it){it[iteratee[0]] === iteratee[1]}
-    }else if(typeof iteratee == 'object'){
-      func = function(it){
-        for(var key in iteratee){
-          if(it[key] !== iteratee[key]){
-            return false
-          }
-        }
-        return true
+    iteratee = this.iteratee(iteratee)
+    var result = []
+    if(Array.isArray(collection)){
+      for(let i = 0; i < collection.length; i++){
+        result.push(iteratee(collection[i], i, collection))
+      }
+    }else{
+      for(var item in collection){
+        result.push(iteratee(collection[item], item, collection))
       }
     }
-    for(var i = 0; i < collection.length; i++){
-      arr.push(func(collection[i],i,collection))
-    }
-    return arr
+    result
   },
   filter: function(array, predicate = this.identity){
     var func = this.iteratee(predicate)
