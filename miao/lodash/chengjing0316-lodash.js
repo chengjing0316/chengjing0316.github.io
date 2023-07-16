@@ -36,8 +36,12 @@ var chengjing0316 = {
       return this.property(func)
     }
     if(typeof func === 'object' && func !== null){
-      return function(obj){
-        return chengjing0316.isMatch(obj,func)
+      if(Array.isArray(func)){
+        return this.property(func[1])
+      }else{
+        return function(obj){
+          return chengjing0316.isMatch(obj,func)
+        }
       }
     }
     return this.identity(func)
@@ -573,10 +577,10 @@ var chengjing0316 = {
   filter: function(array, predicate = this.identity){
     var func = this.iteratee(predicate)
     var result = []
-    for(var i = 0; i < array.length; i++){
-      if(func(array[i], i, array)){
-        result.push(array[i])
-      } 
+    for(let item of array){
+      if(func(array[item])){
+        result.push(array[item])
+      }
     }
     return result
   },
