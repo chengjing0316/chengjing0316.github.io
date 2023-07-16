@@ -41,9 +41,10 @@ var chengjing0316 = {
         var key = func[0], val = func[1]
         return function(obj){
           let flag = false
-          for(var item of obj){
-            if(obj == key && obj[item] == val){
+          for(var item in obj){
+            if(item == key && obj[item] == val){
               flag = true
+              break
             }
           }
           return flag
