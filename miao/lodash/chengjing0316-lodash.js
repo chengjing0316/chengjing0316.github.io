@@ -35,14 +35,13 @@ var chengjing0316 = {
     if(typeof func === 'string'){
       return this.property(func)
     }
+    if(Array.isArray(func)){
+      return this.property(func[1])
+    }
     if(typeof func === 'object' && func !== null){
-      if(Array.isArray(func)){
-        return this.property(func[1])
-      }else{
         return function(obj){
           return chengjing0316.isMatch(obj,func)
         }
-      }
     }
     return this.identity(func)
   },
