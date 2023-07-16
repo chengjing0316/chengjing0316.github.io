@@ -35,6 +35,11 @@ var chengjing0316 = {
     if(typeof func === 'string'){
       return this.property(func)
     }
+    if(Array.isArray(func)){
+      return function (obj) {
+        return obj[value[0]] === value[1];
+      }
+    }
     if(typeof func === 'object' && func !== null){
       return this.matches(func)
     }
@@ -75,16 +80,32 @@ var chengjing0316 = {
   topath:function(){
 
   },
-  differenceBy:function(array, values, iteratee = this.identity){
-    if(!Array.isArray(iteratee)){
-      let iteratee = this.iteratee(iteratee)
-      let newValues = values.map(it => iteratee(it))
-      return array.filter(item => {
-        let newItem = iteratee(item)
-        return !newValues.includes(newItem)
-      })
+  difference: function(...args){
+    let nums1 = args[0], arr = []
+    for(let i = 0; i < nums1.length; i++){
+      for(let j = 1; j < args.length; j++){
+        if(args[j].indexOf(nums1[i]) !== -1){
+          // arr.push(nums1[i])
+          break
+        }
+        if(j == args.length - 1){
+          arr.push(nums1[i])
+        }
+      }
+    }
+    return arr
+  },
+  differenceBy:function(...arrays){
+    if(!Array.isArray(arrays[arrays.length - 1])){
+      let iteratee = this.iteratee(arrays.pop())
+      let result = arrays[0]
+      for(let i = 1; i < arrays.length; i++){
+        let set = new Set(arrays[i].map(it => iteratee(it)))
+        result = result.filter(it => !set.has(iteratee(it)))
+      }
+      return result
     }else{
-      return this.difference(array,values)
+      return this.difference(...arrays)
     }
   },
   differenceWith:function(array, values,comparator){
@@ -223,21 +244,6 @@ var chengjing0316 = {
       result = result.concat(args[i])
     }
     return result
-  },
-  difference: function(...args){
-    let nums1 = args[0], arr = []
-    for(let i = 0; i < nums1.length; i++){
-      for(let j = 1; j < args.length; j++){
-        if(args[j].indexOf(nums1[i]) !== -1){
-          // arr.push(nums1[i])
-          break
-        }
-        if(j == args.length - 1){
-          arr.push(nums1[i])
-        }
-      }
-    }
-    return arr
   },
   fill: function(ary, val, start = 0, end = ary.length){
     for(i = start; i < end; i++){
