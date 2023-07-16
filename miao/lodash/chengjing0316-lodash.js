@@ -573,10 +573,52 @@ var chengjing0316 = {
     }
     return result
   },
+  funjudge2: function(pre) {
+    var flag = false
+    if (typeof pre == 'function') {
+      return pre
+    }
+    if (typeof pre == 'object') {
+      if (Array.isArray(pre)) {
+        var key = pre[0]
+        var val = pre[1]
+        return (obj) => {
+          for (var it in obj) {
+            if (it == key && obj[it] ==val) {
+              flag = true
+              break
+            }
+          }
+          return flag
+        }
+      } else {
+        return (obj) => {
+          for (var [key, val] of Object.entries(pre)) {
+            if (obj[key] != val) {
+              flag = false
+              break
+            } else {
+              flag = true
+            }
+          }
+          return flag
+        }
+      }
+    }
+    if (typeof pre == 'string') {
+      pre = hakunof.toPath(pre)
+      return (obj) => {
+        for (var key of pre) {
+          obj = obj[key]
+        }
+        return obj
+      }
+    }
+  },
   filter: function(array, predicate = this.identity){
-    var func = this.iteratee(predicate)
+    var func = chengjing0316.iteratee(predicate)
     var result = []
-    for(let item of array){
+    for(let item in array){
       if(func(array[item])){
         result.push(array[item])
       }
