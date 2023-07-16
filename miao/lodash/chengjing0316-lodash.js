@@ -28,22 +28,18 @@ var chengjing0316 = {
       return chengjing0316.isEqual(chengjing0316.get(object,path),srcValue)
     }
   },
-  iteratee:function(func){
-    if(typeof func === 'function'){
-      return func
+  iteratee:function(predicate){
+    var func = predicate
+    if(typeof func == 'string'){
+      func = chengjing0316.property(predicate)
+    }else if(Array.isArray(predicate)){
+      func = function(it){
+        return it[predicate[0]] == predicate[1]
+      }
+    }else if(typeof predicate == "object"){
+      func = chengjing0316.matches(predicate)
     }
-    if(typeof func === 'string'){
-      return this.property(func)
-    }
-    if(Array.isArray(func)){
-      return this.property(func[1])
-    }
-    if(typeof func === 'object' && func !== null){
-        return function(obj){
-          return chengjing0316.isMatch(obj,func)
-        }
-    }
-    return this.identity(func)
+    return func
   },
   identity:function(arg){
     return arg
