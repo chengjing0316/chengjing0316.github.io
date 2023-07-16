@@ -35,12 +35,12 @@ var chengjing0316 = {
     if(typeof predicate == 'string'){
       return chengjing0316.property(predicate)
     }
-    if(Array.isArray(predicate)){
-      return function(it){
-        return it[predicate[0]] = predicate[1]
-      }
-    }
     if(typeof predicate == "object"){
+      if(Array.isArray(predicate)){
+        predicate =  function(it){
+          return it[predicate[0]] = predicate[1]
+        }
+      }
       return chengjing0316.matches(predicate)
     }
     return predicate
