@@ -686,11 +686,11 @@ var chengjing0316 = {
     return result
   },
   intersectionBy: function(...arrays){
-    let iteratee = this.iteratee(arrays.pop())
+    let func = this.iteratee(arrays.pop())
     let result = arrays[0]
     for(let i = 1; i < arrays.length; i++){
-      let set = new Set(arrays[i].map(it => iteratee(it)))
-      result = result.filter(it => set.has(iteratee(it)))
+      let set = new Set(arrays[i].map(it => func(it)))
+      result = result.filter(it => set.has(func(it)))
     }
     return result
   },
