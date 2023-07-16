@@ -37,7 +37,7 @@ var chengjing0316 = {
     }
     if(Array.isArray(func)){
       return function (obj) {
-        return obj[value[0]] === value[1];
+        return obj[0] === obj[1];
       }
     }
     if(typeof func === 'object' && func !== null){
