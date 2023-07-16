@@ -19,15 +19,14 @@ var chengjing0316 = {
     }
   },
   matches:function(source){
-    var self = this
     return function(object){
-      return self.isMatch(object,source)
+      return chengjing0316.isMatch(object,source)
     }
   },
   matchesProperty:function(path, srcValue){
     return function(object){
-      return this.isEqual(object[path],srcValue)
-    }.apply(this)
+      return chengjing0316.isEqual(object[path],srcValue)
+    }
   },
   iteratee:function(func){
     if(typeof func === 'function'){
