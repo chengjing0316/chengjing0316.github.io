@@ -67,11 +67,12 @@ var chengjing0316 = {
       if(result.at(0) == ''){
         result.shift()
       }
+      return result
     }
-    return result
+    return value
   },
   get:function(obj, path, defaultValue){
-    path = this.toPath(path)
+    path = chengjing0316.toPath(path)
     for(var key of path){
       if(obj != undefined){
         obj = obj[key]
@@ -86,9 +87,6 @@ var chengjing0316 = {
   },
   set:function(){
     
-  },
-  topath:function(){
-
   },
   difference: function(...args){
     let nums1 = args[0], arr = []
