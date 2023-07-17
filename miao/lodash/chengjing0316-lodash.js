@@ -126,19 +126,58 @@ var chengjing0316 = {
       return true;
     });
   },
-  uniq:function(){
-
+  uniq:function(array){
+    return Array.from(new Set(array))
   },
-  uniqBy:function(){
-
+  uniqBy:function(array){
+    let result = []
+    let set = new Set()
+    for(let item of array){
+      let key = chengjing0316.iteratee(item)
+      if(!set.has(item)){
+        set.add(key)
+        result.push(item)
+      }
+    }
+    return result
   },
   uniqWith:function(array, comparator){
-    
-  },
-  cloneDeep:function(value){
-    if(typeof obj == 'object'){
-
+    let result = []
+    for(let item1 of array){
+      let keep = true
+      for(let item2 of result){
+        if(comparator(item1,item2)){
+          keep = false
+          break
+        }
+      }
+      if(keep){
+        result.push(item1)
+      }
     }
+    return result
+  },
+  cloneDeep:function(obj, cloneMap = new Map()){
+    if(obj && typeof obj == 'object'){
+      if(cloneMap.has(obj)){
+        return cloneMap.get(obj)//获取obj的副本
+      }
+      var copy
+      
+      if(Array.isArray(obj)){
+        copy = []
+      }else{
+        copy = {}
+      }
+      cloneMap.set(obj,copy)//cloneMap里记录的是obj中的每个对象与其副本的映射
+      for(var key in obj){
+        if(obj.hasOwnProperty(key)){
+          copy[key] = this.cloneDeep(obj[key], cloneMap)
+        }
+      }
+      return copy
+    }
+    return obj
   },
   parseJSON:function(){
 
