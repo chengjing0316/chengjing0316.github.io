@@ -157,7 +157,15 @@ var chengjing0316 = {
     }
     return result
   },
+  //如何克隆带环对象？答：建立映射
+  //如何克隆函数？答：函数不需要克隆
+  //如果里面有不认识的对象怎么办？答：应该增加相应的逻辑去处理每一种对象
+  //如果遇到了不认识/没处理到的类型的对象怎么办？提供一个函数给调用者，让他来实现对“我们不认识的对象的克隆”
   cloneDeep:function(obj, cloneMap = new Map()){
+    if(obj instanceof RegExp){
+      var copy = new RegExp(obj.source, obj.flags)
+      return obj
+    }
     if(obj && typeof obj == 'object'){
       if(cloneMap.has(obj)){
         return cloneMap.get(obj)//获取obj的副本
@@ -189,32 +197,146 @@ var chengjing0316 = {
 
   },
   sortedIndex:function(array, value){
-
+    let low = 0;
+    let high = array ? array.length : low;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (array[mid] < value) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+    return low;
+  },
+  sortedIndexBy: function(array, value, iteratee = chengjing0316.identity){
+    let func = chengjing0316.iteratee(iteratee)
+    let low = 0;
+    let high = array ? array.length : low;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (func(array[mid]) < func(value)) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+    return low;
+  },
+  sortedIndexOf: function(array, value){
+    let low = 0;
+    let high = array ? array.length : low;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (array[mid] < value) {
+        low = mid + 1;
+      } else {
+        high = mid;
+      }
+    }
+    return low;
+  },
+  sortedLastIndex: function(array, value){
+    let low = 0;
+    let high = array ? array.length : low;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (array[mid] > value) {
+        high = mid;
+      } else {
+        low = mid + 1;
+      }
+    }
+    return high;
+  },
+  sortedLastIndexBy:function(array, value, iteratee = chengjing0316.identity){
+    let func = chengjing0316.iteratee(iteratee)
+    let low = 0;
+    let high = array ? array.length : low;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (func(array[mid]) > func(value)) {
+        high = mid;
+      } else {
+        low = mid + 1;
+      }
+    }
+    return high;
+  },
+  sortedLastIndexOf: function(array, value){
+    let low = 0;
+    let high = array ? array.length : low;
+    while (low < high) {
+      const mid = Math.floor((low + high) / 2);
+      if (array[mid] > value) {
+        high = mid;
+      } else {
+        low = mid + 1;
+      }
+    }
+    return high;
   },
   sortedUniq:function(array){
+    if(array.length == 0){
+      return []
+    }
     var result = [array[0]]
-
+    for(var i = 1; i < array.length; i++){
+      if(array[i] !== array[i - 1]){
+        result.push(array[i])
+      }
+    }
+    return result
   },
-  sortedUniqBy:function(array, iteratee){
-
+  sortedUniqBy:function(array, iteratee = this.identity){
+    if(array.length == 0){
+      return []
+    }
+    var result = [array[0]]
+    var seenKey = [chengjing0316.iteratee(array[0])]
+    for(var i = 1; i < array.length; i++){
+      var key = chengjing0316.iteratee(array[i])
+      if(key !== seenKey.at(-1)){
+        result.push(array[i])
+      }
+    }
+    return result
   },
   shuffle:function(collection){
 
   },
-  once:function(once){
-
+  once:function(func){
+    var result
+    var called = false
+    return function(...args){
+      if(called){
+        return result
+      }else{
+        called = true
+        result = func.call(this, ...args)
+        return result
+      }
+    }
   },
   negata:function(){
-
+    return function(...args){
+      return !func.call(this, ...args)
+    }
   },
-  ary:function(){
-
+  ary:function(func, [n = func.length]){
+    return function(...args){
+      return func(...args.slice(0,n))
+    }
   },
-  unary:function(){
-
+  unary:function(func){
+    return function(...args){
+      return func(...args.slice(0,1))
+    }
   },
   flip:function(){
-
+    return function(...args){
+      return func(...args.reverse())
+    }
   },
   spread:function(){
 
