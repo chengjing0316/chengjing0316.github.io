@@ -135,7 +135,7 @@ var chengjing0316 = {
     let set = new Set()
     for(let item of array){
       let key = func(item)
-      if(!set.has(item)){
+      if(!set.has(key)){
         set.add(key)
         result.push(item)
       }
