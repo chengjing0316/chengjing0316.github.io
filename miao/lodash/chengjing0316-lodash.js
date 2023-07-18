@@ -129,11 +129,12 @@ var chengjing0316 = {
   uniq:function(array){
     return Array.from(new Set(array))
   },
-  uniqBy:function(array){
+  uniqBy:function(array, iteratee=this.identity){
+    let func = chengjing0316.iteratee(iteratee)
     let result = []
     let set = new Set()
     for(let item of array){
-      let key = chengjing0316.iteratee(item)
+      let key = func(item)
       if(!set.has(item)){
         set.add(key)
         result.push(item)
@@ -274,7 +275,7 @@ var chengjing0316 = {
         low = mid + 1;
       }
     }
-    return high;
+    return high - 1;
   },
   sortedUniq:function(array){
     if(array.length == 0){
@@ -289,13 +290,14 @@ var chengjing0316 = {
     return result
   },
   sortedUniqBy:function(array, iteratee = this.identity){
+    let func = chengjing0316.iteratee(iteratee)
     if(array.length == 0){
       return []
     }
     var result = [array[0]]
-    var seenKey = [chengjing0316.iteratee(array[0])]
+    var seenKey = [func(array[0])]
     for(var i = 1; i < array.length; i++){
-      var key = chengjing0316.iteratee(array[i])
+      var key = func(array[i])
       if(key !== seenKey.at(-1)){
         result.push(array[i])
       }
@@ -318,7 +320,7 @@ var chengjing0316 = {
       }
     }
   },
-  negata:function(){
+  negata:function(func){
     return function(...args){
       return !func.call(this, ...args)
     }
