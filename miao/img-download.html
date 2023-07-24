@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片下载同步异步</title>
+</head>
+<body>
+  <button onclick="downloadOneByOneSync()">同步一张</button>
+  <button onclick="downloadOneByOne()">异步一张</button>
+  <button onclick="downloadN()">一次N张</button>
+  <button></button>
+  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ut voluptate laborum molestias. Rem quae tenetur aliquid distinctio est voluptate laudantium quidem maiores sapiente consectetur maxime, beatae velit fugiat soluta qui.</p>
+  <script>
+    var catsUrl = 'https://xieranmaya.github.io/images/cats/cats.json'
+    function getURL(url, callback){
+      let req = new XMLHttpRequest()
+      req.open("GET", url)
+      req.onload = () => {
+        callback(req.responseText)
+      }
+      req.send()
+    }
+
+    //图片下载
+    function downloadImg(url, callback){
+        let img = new Image()
+        img.onload = () => {
+          callback()
+        }
+        img.src = url
+      }
+    //同步一张一张下
+    function downloadOneByOneSync(){
+      getURL(catsUrl, data => {
+        let cats = JSON.parse(data)
+        for(let cat of cats){
+          downloadImgSync(cat.fullUrl)
+        }
+      })
+      function downloadImgSync(url){
+        let req = new XMLHttpRequest()
+        req.open("GET", url, false)
+        req.send()
+      }
+    }
+
+    //异步一张一张
+    function downloadOneByOne(){
+      var i = 0
+      getURL(catsUrl, data => {
+        var cats = JSON.parse(data)
+        downloadOneImg(cats)
+      })
+
+      function downloadOneImg(cats){
+        if(i < cats.length){
+          downloadImg(cats[i++].fullUrl, () => {
+            downloadOneImg(cats)
+          })
+         
+        }else{
+          console.log("串行下载完成")
+        }
+      }
+    }
+
+    //异步一次n张
+    function downloadN(){
+      var i = 0
+      var count = 0
+      getURL(catsUrl, data => {
+        var cats = JSON.parse(data)
+        for(let n = 0; n < 3; n++){
+          downloadOne(cats)
+        }
+      })
+
+      function downloadOne(cats){
+        if(i < cats.length){
+          downloadImg(cats[i++].fullUrl, () => {
+            count++
+            downloadOne(cats)
+            if(count === cats.length){
+              console.log('并行下载完成')
+            }
+          })
+        }
+      }
+    }
+  </script>
+</body>
+</html>

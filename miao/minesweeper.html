@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>扫雷</title>
+  <style>
+    body{
+      background-color: black;
+    }
+    header{
+      margin-bottom: 20px;
+    }
+    h1, h2{
+      margin:10px auto 10px;
+      width: 100%;
+      color: #bdbdbd;
+      text-align: center;
+      font-size: 18px;
+    }
+    h2 > a{
+      color: #bdbdbd;
+      font-weight: lighter;
+    }
+    main{
+      margin: auto;
+      width: max-content;
+      border: 10px rgb(204,204,204) solid;
+      border-radius: 5px;
+    }
+    .wrapper{
+      background-color: rgb(204, 204, 204);
+      width: max-content;
+    }
+    .top{
+      width: 100%;
+      height: 36px;
+      border: inset 2px;
+      margin-bottom: 7px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 6px;
+    }
+    .minesNubmer{
+      width: 39px;
+      height: 24px;
+      background-color: black;
+      color: white;
+    }
+    .timeCount{
+      width: 39px;
+      height: 24px;
+      background-color: black;
+      color: white;
+    }
+    #stage {
+      font-size: 0;
+      width: max-content;
+      border: 2px #bdbdbd inset;
+      margin: auto;
+      box-sizing: border-box;
+    }
+    button{
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+      width: 25px;
+      height: 25px;
+      border: 3px solid;
+      border-color: white #7b7b7b #7b7b7b white;
+      background-color: #bdbdbd;
+      vertical-align: bottom;
+      text-align: center;
+      padding: 0;
+      font-family: consolas;
+      line-height: 16px;
+      font-weight: bolder;
+    }
+    button.unrevealed.active{
+      border: 1px solid #7b7b7b;
+      border-width: 1px 0 0 1px;
+    }
+    button.blank{
+      border: 1px solid #7b7b7b;
+      background-color: #bdbdbd;
+      border-width: 1px 0 0 1px;
+    }
+
+    button.mine{
+      background-color: #7b7b7b;
+      background-image: url(sprite100.gif);
+      background-position: -109px -67px;
+      background-size: 1000%;
+      border: 1px solid #7b7b7b;
+      border-width: 1px 0 0 1px;
+    }
+    button.xmine{
+      background-color: #7b7b7b;
+      background-image: url(sprite100.gif);
+      background-position: -56px -67px;
+      background-size: 1000%;
+      border: 1px solid #7b7b7b;
+      border-width: 1px 0 0 1px;
+    }
+    
+    button[data-mines]{
+      border: 1px solid #7b7b7b;
+      background-color: #bdbdbd;
+      border-width: 1px 0 0 1px;
+    }
+    button[data-mines="1"] {
+      color: blue;
+    }
+    button[data-mines="2"] {
+      color: #007b00;
+    }
+    button[data-mines="3"] {
+      color: red;
+    }
+    button[data-mines="4"] {
+      color: #00007b;
+    }
+    button[data-mines="5"] {
+      color: #7b0000;
+    }
+    button[data-mines="6"] {
+      color: #007b7b;
+    }
+    button[data-mines="7"] {
+      color: black;
+    }
+    button[data-mines="8"] {
+      color: #7b7b7b;
+    }
+    button.flag::before{
+      content: "\26FF";
+      color: red;
+      font-size: 12px;
+    }
+
+  </style>
+</head>
+<body onselectstart="return false">
+  <header>
+    <h1>网页扫雷游戏</h1>
+    <h2>
+      <a href="" id="beginner">初级</a>
+      <a href="" id="intermediate">中级</a>
+      <a href="" id="expert">专家</a>
+      <a href="">自定义</a>
+    </h2>
+  </header>
+  <main>
+    <div class="wrapper">
+      <div class="top">
+        <div class="minesNubmer"></div>
+        <button class="face"></button>
+        <div class="timeCount"></div>
+      </div>
+      <div id="stage"></div>
+    </div>
+  </main>
+
+
+  <footer></footer>
+
+  <script>
+    class minesweeper{
+      constructor(width = 16, height = 16){
+        this.width = width
+        this.height = height
+        this.board = new Array(this.height).fill(0).map(() => new Array(this.width).fill("E"))
+        this.flags = new Array(this.height).fill(0).map(() => new Array(this.width).fill(' '))//存储旗帜标志
+        this.randomMines()
+      }
+
+      randomMines(){
+        for(let  row = 0; row < this.height; row++){
+          for(let  col = 0; col < this.width; col++){
+            if(Math.random() < 0.1){
+              this.board[row][col] = "M"
+            }
+          }
+        }
+      }
+      minesTotal(){
+        let total = 0
+        for(let row = 0; row < this.height; row++){
+          for(let col = 0; col < this.width; col++){
+            if(this.board[row][col] == "M"){
+              total++
+            }
+          }
+        }
+        return total
+      }
+
+      flagsTotl(){
+        let total = 0
+        for(let row = 0; row < this.height; row++){
+          for(let col = 0; col < this.width; col++){
+            if(this.flags[row][col] == "P"){
+              total++
+            }
+          }
+        }
+        return total
+      }
+
+      mineCount(board, [r, c]){
+        let count = 0
+        for(let row = r - 1; row <= r + 1; row++){
+          for(let col = c - 1; col <= c + 1; col++){
+            if(board[row]?.[col] == 'M' || board[row]?.[col] == "X"){
+              count++
+            }
+          }
+        }
+        return count
+      }
+
+      flagCount(flags, [r, c]){
+        let count = 0
+        for (let row = r - 1; row <= r + 1; row++) {
+          for (let col = c - 1; col <= c + 1; col++) {
+            if (flags[row]?.[col] == 'P') {
+              count++
+            }
+          }
+        }
+        return count
+      }
+
+      updateBoard(board, click){
+        var [r,c] = click
+        var char = board[r][c]
+        if(char == 'M'){
+          for(let i = 0; i < this.height; i++){
+            for(let j = 0; j < this.width; j++){
+              if(board[i][j] == 'M'){
+                board[i][j] = 'X'
+              }
+            }
+          }
+          board[r][c] = 'XM'
+          return board
+        }
+        if(char == 'E'){
+          let mines = this.mineCount(board, [r,c])
+          if(mines > 0){
+            board[r][c] = String(mines)
+          }else{
+            this.reveal(board, [r,c])
+          }
+            return board
+        }
+      }
+
+      reveal(board, [r,c]){
+        if(board[r][c] == 'B') return
+        if(board[r][c] >= '1' && board[r][c] <= '8') return
+        if(board[r][c] == 'X') return
+        let mines = this.mineCount(board,[r,c])
+        if(mines == 0){
+          board[r][c] = 'B'
+            for(let row = r - 1; row <= r + 1; row++){
+              for(let col = c - 1; col <= c + 1; col++){
+                if(row >=0 && row < board.length && col >=0 && col < board[0].length){
+                  this.reveal2(board, [row,col])
+                }
+              }
+            }
+        }else{
+          board[r][c] = String(mines)
+        }
+      }
+
+      reveal2(board, [r,c]){
+        if(board[r][c] == 'B') return
+        if(board[r][c] >= '1' && board[r][c] <= '8') return
+        if(board[r][c] == 'X') return
+        if(board[r][c] == 'M') return board[r][c] = 'X'
+        if(board[r][c] == "p") return
+        let mines = this.mineCount(board,[r,c])
+        if(mines == 0){
+          board[r][c] = 'B'
+            for(let row = r - 1; row <= r + 1; row++){
+              for(let col = c - 1; col <= c + 1; col++){
+                if(row >=0 && row < board.length && col >=0 && col < board[0].length){
+                  this.reveal(board, [row,col])
+                }
+              }
+            }
+        }else{
+          board[r][c] = String(mines)
+        }
+      }
+
+      render(){
+        let minesNubmer = document.querySelector('.minesNubmer')
+        minesNubmer.innerText = this.minesTotal() - this.flagsTotl()
+        stage.style.removeProperty('pointer-events')
+        stage.innerHTML = this.board.map((row,rowIdx) => {
+          return row.map((cell,colIdx) => {
+            var flagStr =""
+            if(this.flags[rowIdx][colIdx] == 'P'){
+              flagStr = " flag"
+            }
+            if(cell == 'M'){
+              return `<button data-row="${rowIdx}" data-col="${colIdx}" class="unrevealed${flagStr}" ></button>`
+            }
+            if(cell == 'E'){
+              return `<button data-row="${rowIdx}" data-col="${colIdx}" class="unrevealed${flagStr}" ></button>`
+            }
+            if(cell == 'B'){
+              return `<button data-row="${rowIdx}" data-col="${colIdx}" class="blank"></button>`
+            }
+            if(cell >= '1' && cell <= '8'){
+              return `<button data-row="${rowIdx}" data-col="${colIdx}" class="number" data-mines="${cell}">${cell}</button>`
+            }
+            if(cell == 'X'){
+              return `<button data-row="${rowIdx}" data-col="${colIdx}" class="mine"></button>`
+            }
+            if(cell == 'XM'){
+              return `<button data-row="${rowIdx}" data-col="${colIdx}" class="xmine"></button>`
+            }
+          }).join('')
+        }).join('<br>')
+      }
+
+
+    }
+
+
+    var game = new minesweeper()
+    game.render()
+
+    //阻止右键默认菜单
+    stage.addEventListener('contextmenu', e => {
+      e.preventDefault()
+    })
+
+    //右键单击翻开周围所有无地雷的，若八方存在地雷，则选中八方中所有未翻开的
+    stage.addEventListener('mouseup',e=>{
+      let minesNubmer = document.querySelector('.minesNubmer')
+      let btn = e.target
+      let row = +btn.dataset.row
+      let col = +btn.dataset.col
+      let mines = +btn.dataset.mines
+      let char = game.flags[row][col]
+      let c = 0
+      //放置旗帜
+      if(e.which == 3 && e.target.matches('button')){
+        if(game.board[row][col] == 'M' || game.board[row][col] == 'E'){
+          if(char == ' '){
+            game.flags[row][col] = "P"
+            btn.classList.add('flag')
+          }else if(char == 'P'){
+            game.flags[row][col] = " "
+            btn.classList.remove('flag')
+          }
+          for(let i = 0; i < game.flags.length; i++){
+            for(let j = 0; j < game.flags[0].length; j++){
+              if(game.flags[i][j] == "P"){
+                c++
+              }
+            }
+          }
+          game.render()
+        }
+
+        //若周围八方的地雷都被标记，或者有对应地雷数的标记，则把八方全翻开
+        let f = game.flagCount(game.flags, [row, col])
+        if(f == mines){
+          for(let r = row - 1; r <= row + 1; r++){
+            for(let c = col -1; c <= col + 1; c++){
+              if((game.board[r]?.[c] == 'E' || game.board[r]?.[c] == 'M') && game.flags[r]?.[c] !== 'P'){
+                console.log(1)
+                game.reveal2(game.board, [r, c])
+              }
+            }
+          }
+          game.render()
+        }
+      }
+
+      //左键单击翻开
+      if(e.which == 1 && e.target.matches('button')){
+        game.updateBoard(game.board, [row,col])
+        game.render()
+        if(game.board[row][col] == 'XM'){
+          stage.style.pointerEvents = 'none'
+          return
+        }
+      }
+    })
+
+    //选中没有P的
+    // stage.addEventListener('mousedown', e => {
+    //   if(e.which == 3){
+    //     stage.addEventListener('mousemove', stageMouseMove2)
+    //   }
+    // })
+
+    // function stageMouseMove2(e){
+    //   if(e.which == 0){//鼠标没有被按下，移除点击效果
+        
+    //   }
+    // }
+    beginner.addEventListener('click', e => {
+      e.preventDefault()
+      if(e.target.innerText == '初级'){
+        game = new minesweeper(9, 9)
+        game.render()
+      }
+    })
+    intermediate.addEventListener('click', e => {
+      e.preventDefault()
+      if(e.target.innerText == '中级'){
+        game = new minesweeper(16, 16)
+        game.render()
+      }
+    })
+    expert.addEventListener('click', e => {
+      e.preventDefault()
+      if(e.target.innerText == '专家'){
+        game = new minesweeper(30, 16)
+        game.render()
+      }
+    })
+
+
+    var timeCount = document.querySelector('.timeCount')
+    var ticks = 0
+    timeCount.innerText = ticks
+     setInterval(()=>{
+      ticks++
+      timeCount.innerText = ticks
+     },1000)
+  </script>
+</body>
+</html>
