@@ -300,6 +300,7 @@ var chengjing0316 = {
       var key = func(array[i])
       if(key !== seenKey.at(-1)){
         result.push(array[i])
+        seenKey.push(key)
       }
     }
     return result
@@ -875,6 +876,27 @@ var chengjing0316 = {
     let idx = n < 0 ? array.length + n : n
     return array[idx]
   },
+  tail: function(array){
+    return array.slice(1)
+  },
+  take: function(array, n = 1){
+    return array.slice(0,n)
+  },
+  takeRight: function(array, n = 1){
+    return n > array.length ? array : array.slice(array.length - n)
+  },
+  takeRightWhile: function(array, predicate = this.identity){
 
+  },
+  union: function(...arrays){
+    let val = this.flattenDeep(arrays)
+    return Array.from(new Set(val))
+  },
+  unionBy: function(...arrays){
+
+  },
+  unionWith: function(...arrays){
+
+  },
 }
 
