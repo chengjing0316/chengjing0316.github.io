@@ -885,6 +885,9 @@ var chengjing0316 = {
   takeRight: function(array, n = 1){
     return n > array.length ? array : array.slice(array.length - n)
   },
+  takeWhile: function(){
+
+  },
   takeRightWhile: function(array, predicate = this.identity){
 
   },
@@ -897,6 +900,20 @@ var chengjing0316 = {
   },
   unionWith: function(...arrays){
 
+  },
+  zip: function(...arrays) {
+    if(!arrays.length){
+      return []
+    }
+    const maxLength = Math.max(...arrays.map(it => it.length))
+    const result = []
+    for(let i = 0; i < maxLength; i++){
+      result.push(arrays.map(it => it[i]))
+    }
+    return result
+  },
+  unzip: function(array){
+    
   },
 }
 
