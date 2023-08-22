@@ -13,12 +13,12 @@
       height: 100%;
       background-color: rgb(245,245,245);
       font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      min-width: 800px;
     }
     div.wrapper{
       width: 50%;
       height: 100%;
-      margin: auto;
-      text-align: center;
+      xtext-align: center;
       font-size: 30px;
     }
     h1{
@@ -35,9 +35,6 @@
     .bar > *{
       display: inline-block;
     }
-    .bar > ul > *{
-      display: inline-block;
-    }
 
     ul.visible-active li.completed{
       display: none;
@@ -49,42 +46,53 @@
       text-decoration: line-through;
       opacity: 0.5;
     }
+    #memolist > li{
+      height: 50px;
+    }
+    #memolist > li > input{
+      font-size: 30px;
+    }
   </style>
 </head>
 <body>
   <div class="wrapper">
     <!-- 标题 -->
-    <header>
-      <h1>todos</h1>
-    </header>
+    <h1>todos</h1>
 
     <!-- 主体 -->
     <div class="main">
       <div>
-        <input type="checkbox">
+        <!-- 通过toggleAll函数切换completed状态勾选所有待办 -->
+        <input type="checkbox" @click="toggleAll()">
+        <!-- 输入框，enter以后调用addTodo函数存储数据 -->
         <input type="text" @keyup.enter="addTodo($event)" placeholder="What needs to be done?">
       </div>
       <ul id="memolist" :class="`visible-${visibleTodos}`">
         <li :class="todo.completed ? 'completed':'active'" v-for="(todo, idx) of showList(todos)">
           <input data-index="0" type="checkbox" :checked="todo.completed" @change="changeTodoState(idx)">
           <span v-show="editIdx !== idx" @dblclick="edit(idx)">{{ todo.content }}</span>
+          <!-- 双击后出现的修改框，通过editIdx == idx是否为真来控制显现与隐藏效果 -->
           <input 
-            :value="todo.content"
-            v-show="editIdx == idx"
+            @keyup.escape="editIdx=-1"
             @keyup.enter="todo.content = $event.target.value.trim();editIdx=-1"
             @blur="todo.content = $event.target.value.trim();editIdx = -1"
+            :value="todo.content"
+            v-show="editIdx == idx"
             type="text">
+          <!-- X删除单个待办 -->
           <button @click="deleteTodo(idx)">&times;</button>
         </li>
       </ul>
       <div class="bar">
+        <!-- 通过筛选completed的状态统计未完成待办 -->
         <span><em>{{ todos.filter(it => !it.completed).length }}</em>items left</span>
         <div class="visible-select">
           <label><input type="radio" @click="visibleTodos = $event.target.value" value="all" name="visible-todos" checked> All</label>
           <label><input type="radio" @click="visibleTodos = $event.target.value" value="active" name="visible-todos" > Active</label>
           <label><input type="radio" @click="visibleTodos = $event.target.value" value="completed" name="visible-todos" > Completed</label>
         </div>
-        <button>Clear completed</button>
+        <!-- 存在completed为真的就出现Clear completed按键 -->
+        <button @click="clearCompleted()" v-show="todos.some(it => it.completed)">Clear completed</button>
       </div>
     </div>
 
@@ -117,7 +125,7 @@
       }
     },
     methods:{
-      //
+      //用来控制双击修改input输入框的显示，editIdx = idx时显示，editIdx=-1时不显示
       edit(idx){
         this.editIdx = idx
       },
@@ -153,7 +161,7 @@
       clearCompleted(){
         this.todos = this.todos.filter(it => !it.completed)
       },
-      //钩选所有
+      //钩选所有待办，通过设置completed的状态来改变
       toggleAll(){
         if(this.todos.every(it => it.completed)){
           this.todos.forEach(it => {it.completed = false})
@@ -255,16 +263,23 @@
       id3:{content:xxx,active:true}
     ]
   }
-
+  //修改
+  localstorage{
+    todos:[
+      {content:xxx,completed:false},
+      {content:xxx,completed:false},
+      {content:xxx,completed:false}
+    ]
+  }
   2、对应localstorage的存储方式全面修改代码，实现初步效果（20：27 -- ）
     (1)新增条目操作 ✓
     (2)复选框勾选划掉效果，同时active改为false ✓
     (3)最底层统计效果 ✓
     (4)条目最右边的叉删除效果 ✓
     (5)Clear completed删除与现实消失效果
-    (6)双击修改数据效果
+    (6)双击修改数据效果 ✓
     (7)esc回退效果
-    (8)样式更改
+    (8)全选效果 ✓
 
   3、
 -->
