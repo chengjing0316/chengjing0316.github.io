@@ -13,27 +13,64 @@
       height: 100%;
       background-color: rgb(245,245,245);
       font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      min-width: 800px;
+    }
+    .main{
+      width: 550px;
+      background-color: white;
+      box-shadow: 1px 2px 15px 2px #dddd;
+    }
+    .main > div{
+      border: 1px solid #dddd;
     }
     div.wrapper{
-      width: 50%;
+      width: 550px;
       height: 100%;
-      xtext-align: center;
       font-size: 30px;
+      margin:auto
+    }
+    ul{
+      margin: 0;
+      padding: 0;
     }
     h1{
       margin: 0;
       color: #EAD7D7;
       font-size: 100px;
+      text-align: center;
     }
-    li{
-      list-style: none;
+    ul > li > button{
+      float: right;
+      height: 30px;
+      margin: 15px 0 15px 0;
+      color: white;
+      background-color: white;
+      border: none;
+      font-size: 30px;
+    }
+    ul > li:hover button{
+      color: red;
+    }
+    #inputBox{
+      width: 90%;
+      border: none;
+      height: 60px;
+      outline: none;
+      font-size: 30px;
+    }
+    #inputBox::placeholder{
+      font-family:'Times New Roman', Times, serif;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 30px;
+      color: #dddd;
     }
     .delete{
       text-decoration: line-through;
     }
     .bar > *{
       display: inline-block;
+      color: #aaaa;
+      font-size: 16px;
     }
 
     ul.visible-active li.completed{
@@ -47,10 +84,34 @@
       opacity: 0.5;
     }
     #memolist > li{
-      height: 50px;
+      list-style: none;
+      width: 550px;
+      height: 60px;
+      border: 1px solid #dddd;
+      height: 60px;
+      line-height: 60px;
     }
     #memolist > li > input{
       font-size: 30px;
+    }
+    footer{
+      color: #bbbb;
+      font-size: 12px;
+      margin:40px auto 0;
+      text-align: center;
+    }
+    .p1 , .p2{
+      height: 3px;
+      border: 1px solid #dddd;
+      margin: auto;
+      padding: 0;
+      background-color: #fff;
+    }
+    .p1{
+      width: 540px;
+    }
+    .p2{
+      width: 530px;
     }
   </style>
 </head>
@@ -63,16 +124,16 @@
     <div class="main">
       <div>
         <!-- 通过toggleAll函数切换completed状态勾选所有待办 -->
-        <input type="checkbox" @click="toggleAll()">
+        <input type="checkbox" @click="toggleAll()" :checked="isAllCompleted" v-show="allCompleted">
         <!-- 输入框，enter以后调用addTodo函数存储数据 -->
-        <input type="text" @keyup.enter="addTodo($event)" placeholder="What needs to be done?">
+        <input type="text" @keyup.enter="addTodo($event)" placeholder="What needs to be done?" id="inputBox">
       </div>
-      <ul id="memolist" :class="`visible-${visibleTodos}`">
-        <li :class="todo.completed ? 'completed':'active'" v-for="(todo, idx) of showList(todos)">
-          <input data-index="0" type="checkbox" :checked="todo.completed" @change="changeTodoState(idx)">
-          <span v-show="editIdx !== idx" @dblclick="edit(idx)">{{ todo.content }}</span>
+      <ul id="memolist" :class="`visible-${visibleTodos}`" >
+        <li :class="todo.completed ? 'completed':'active'" v-for="(todo, idx) of showList">
+          <input type="checkbox" :checked="todo.completed" @change="changeTodoState(idx)">
+          <span v-show="editIdx !== idx" @dblclick="edit(idx), focusNext($event)">{{ todo.content }}</span>
           <!-- 双击后出现的修改框，通过editIdx == idx是否为真来控制显现与隐藏效果 -->
-          <input 
+          <input style="height: 100%;border: none;box-shadow: inset; padding:none;margin: none;"
             @keyup.escape="editIdx=-1"
             @keyup.enter="todo.content = $event.target.value.trim();editIdx=-1"
             @blur="todo.content = $event.target.value.trim();editIdx = -1"
@@ -85,25 +146,28 @@
       </ul>
       <div class="bar">
         <!-- 通过筛选completed的状态统计未完成待办 -->
-        <span><em>{{ todos.filter(it => !it.completed).length }}</em>items left</span>
+        <span><em>{{ leftCount }}</em>items left</span>
         <div class="visible-select">
           <label><input type="radio" @click="visibleTodos = $event.target.value" value="all" name="visible-todos" checked> All</label>
           <label><input type="radio" @click="visibleTodos = $event.target.value" value="active" name="visible-todos" > Active</label>
           <label><input type="radio" @click="visibleTodos = $event.target.value" value="completed" name="visible-todos" > Completed</label>
         </div>
         <!-- 存在completed为真的就出现Clear completed按键 -->
-        <button @click="clearCompleted()" v-show="todos.some(it => it.completed)">Clear completed</button>
+        <button @click="clearCompleted()" v-show="clearList">Clear completed</button>
       </div>
     </div>
-
+    <p class="p1"></p>
+    <p class="p2"></p>
     <!-- 底部 -->
     <footer>
-      <p></p>
-      <p></p>
-      <p></p>
+      <p>Double-click to edit a todo</p>
+      <p>Written by Addy Osmani</p>
+      <p>Part of TodoMVC</p>
     </footer>
   </div>
 </body>
+
+
 
 <script>
   var app = new Vue({
@@ -124,10 +188,11 @@
         }
       }
     },
-    methods:{
-      //用来控制双击修改input输入框的显示，editIdx = idx时显示，editIdx=-1时不显示
-      edit(idx){
-        this.editIdx = idx
+    //现有数据衍生的数据
+    computed:{
+      //计算剩余待办数量
+      leftCount() {
+        return this.todos.filter(it => !it.completed).length
       },
       //三种情况的切换
       showList(){
@@ -137,6 +202,24 @@
           return this.todos.filter(it => !it.completed)
         }
         return this.todos
+      },
+      //只要有完成的待办就返回true
+      clearList(){
+        return this.todos.some(it => it.completed)
+      },
+      //所有的待办都完成及tosos不为空返回真
+      isAllCompleted(){
+        return this.todos && this.todos.every(it => it.completed)
+      },
+      //所有待办都清空了返回真（用于v-show显示全部勾选按钮）
+      allCompleted(){
+        return this.todos.length != 0
+      },
+    },
+    methods:{
+      //用来控制双击修改input输入框的显示，editIdx = idx时显示，editIdx=-1时不显示
+      edit(idx){
+        this.editIdx = idx
       },
       //事件发生时数据存到todos中，同时清空输入框内容
       addTodo(e){
@@ -149,6 +232,9 @@
           e.target.value = ''
         }
       },
+      // focusI(e){
+      //   e.target.selectionStart = e.target.selectionEnd = 9999999
+      // },
       //改变todos中待办的completed状态
       changeTodoState(idx){
         this.todos[idx].completed = !this.todos[idx].completed
@@ -168,6 +254,10 @@
         }else{
           this.todos.forEach(it => it.completed = true)
         }
+      },
+      focusNext(event) {
+        const nextElement = event.target.nextElementSibling
+          nextElement.selectionStart=nextElement.selectionEnd = 9999999
       }
     }
   })
