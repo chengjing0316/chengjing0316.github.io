@@ -19,8 +19,23 @@ class Vector{
     return Math.sqrt(this.x * this.x + this.y * this.y)
   }
 }
-
-
+//自己写的链式调用简单计算器
+class Tc{
+  constructor(vall){
+    this.val = vall
+  }
+  add(val){
+    var x = this.val + val
+    return new Tc(x)
+  }
+  minus(val){
+    var x = this.val - val
+    return new Tc(x)
+  }
+  get value(){
+    return this.val
+  }
+}
 //Complex
 class Complex{
   constructor(real, imag){
@@ -223,7 +238,7 @@ class MyMap{
 }
 // MySet
 class MySet{
-  elements = []
+  // elements = []
   constructor(){
     this.elements = []
   }
